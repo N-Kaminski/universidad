@@ -5,6 +5,8 @@ const port = 3000;
 
 const estudianteRouters = require("./routers/estudianteRouters");
 const profesorRouters = require("./routers/profesorRouters");
+const cursoRouters = require("./routers/cursoRouters");
+const cursoEstudianteRouters = require("./routers/cursoEstudianteRouters");
 
 //middleware
 app.use(cors());
@@ -18,6 +20,8 @@ app.get("/", (req, res) => {
 //LE DIGO A LA APP QUE USE ESTAS RUTAS
 app.use("/estudiantes", estudianteRouters); //le digo a la app que use todo lo que tenga en rutas
 app.use("/profesores", profesorRouters);
+app.use("/cursos", cursoRouters);
+app.use("/cursos_estudiantes", cursoEstudianteRouters);
 
 //PUERTO
 app.listen(port, () => {
