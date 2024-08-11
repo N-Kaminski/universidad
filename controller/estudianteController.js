@@ -5,8 +5,8 @@ class EstudianteController {
   constructor() {}
 
   async insertar(req, res) {
+    const { dni, nombre, apellido, email } = req.body; //lo trae del body
     try {
-      const { dni, nombre, apellido, email } = req.body; //lo trae del body
       const [result] = await db.query(
         `INSERT INTO estudiantes (dni, nombre, apellido, email) VALUES (?, ?, ?, ?)`,
         [dni, nombre, apellido, email]
@@ -27,8 +27,8 @@ class EstudianteController {
   }
 
   async consultarUno(req, res) {
+    const { id } = req.params; //parametro requerimiento (id)
     try {
-      const { id } = req.params; //parametro requerimiento (id)
       const [rows] = await db.query("SELECT * FROM estudiantes WHERE id = ?", [
         id,
       ]);
@@ -42,9 +42,9 @@ class EstudianteController {
   }
 
   async modificar(req, res) {
+    const { id } = req.params; //viene por parametro
+    const { dni, nombre, apellido, email } = req.body; //viene por body
     try {
-      const { id } = req.params; //viene por parametro
-      const { dni, nombre, apellido, email } = req.body; //viene por body
       const [rows] = await db.query(
         `UPDATE estudiantes SET dni = ?, nombre = ?, apellido = ?, email = ? WHERE id = ?`,
         [dni, nombre, apellido, email, id]
@@ -61,8 +61,20 @@ class EstudianteController {
   }
 
   async eliminar(req, res) {
+    const { id } = req.params; //viene por parametro
+    const conex = await db.getConnection();
     try {
-      const { id } = req.params; //viene por parametro
+      await conex.beginTransaction();
+      const [result] = await db.query(
+        `SELECT COUNT(*) AS Total FROM cursos_estudiantes WHERE estudiante_id = ?`,
+        [id]
+      );
+      if (result[0].Total > 0) {
+        // si tiene inscripciones asignadas
+        await conex.rollback();
+        res.status(400).send("No se puede eliminar el estudiante");
+        return;
+      }
       const [rows] = await db.query(`DELETE FROM estudiantes WHERE id = ?`, [
         id,
       ]);
@@ -74,6 +86,8 @@ class EstudianteController {
       }
     } catch (error) {
       res.status(500).send(error.message);
+    } finally {
+      conex.release();
     }
   }
 }

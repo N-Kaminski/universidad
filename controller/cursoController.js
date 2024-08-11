@@ -50,8 +50,8 @@ class CursoController {
   }
 
   async consultarUno(req, res) {
+    const { id } = req.params;
     try {
-      const { id } = req.params;
       const [rows] = await db.query("SELECT * FROM cursos WHERE id = ?", [id]);
       if (rows.length === 0) {
         return res.status(404).send("Curso no encontrado");

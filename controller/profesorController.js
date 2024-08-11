@@ -5,8 +5,8 @@ class ProfesorController {
   constructor() {}
 
   async insertar(req, res) {
+    const { dni, nombre, apellido, email, profesion, telefono } = req.body; //lo trae del body
     try {
-      const { dni, nombre, apellido, email, profesion, telefono } = req.body; //lo trae del body
       const [result] = await db.query(
         `INSERT INTO profesores (dni, nombre, apellido, email, profesion, telefono) VALUES (?, ?, ?, ?, ?, ?)`,
         [dni, nombre, apellido, email, profesion, telefono]
@@ -28,8 +28,8 @@ class ProfesorController {
   }
 
   async consultarUno(req, res) {
+    const { id } = req.params; //parametro requerimiento (id)
     try {
-      const { id } = req.params; //parametro requerimiento (id)
       const [rows] = await db.query("SELECT * FROM profesores WHERE id = ?", [
         id,
       ]);
@@ -43,9 +43,9 @@ class ProfesorController {
   }
 
   async modificar(req, res) {
+    const { id } = req.params; //viene por parametro
+    const { dni, nombre, apellido, email, profesion, telefono } = req.body; //viene por body
     try {
-      const { id } = req.params; //viene por parametro
-      const { dni, nombre, apellido, email, profesion, telefono } = req.body; //viene por body
       const [rows] = await db.query(
         `UPDATE profesores SET dni = ?, nombre = ?, apellido = ?, email = ?, profesion = ?, telefono = ? WHERE id = ?`,
         [dni, nombre, apellido, email, profesion, telefono, id]
