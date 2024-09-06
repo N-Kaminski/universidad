@@ -1,4 +1,4 @@
-module.exports = {
+const dbConfig = {
   host: "127.0.0.1",
   user: "root",
   password: "",
@@ -8,3 +8,5 @@ module.exports = {
   connectionLimit: 10,
   queueLimit: 0,
 };
+
+export default dbConfig;

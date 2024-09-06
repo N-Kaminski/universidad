@@ -3,9 +3,39 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "joi": "^17.13.3",
+    "morgan": "^1.10.0",
     "mysql2": "^3.11.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21"
-  }
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.5.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.4"
+  },
+  "name": "universidad",
+  "version": "1.0.0",
+  "description": "mini app para universidad para aprender.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "start": "node build/index.js",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/N-Kaminski/universidad.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "TypeScript",
+    "node.js",
+    "Express"
+  ],
+  "author": "Nicolas Kaminski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/N-Kaminski/universidad/issues"
+  },
+  "homepage": "https://github.com/N-Kaminski/universidad#readme"
 }
