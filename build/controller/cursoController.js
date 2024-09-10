@@ -8,218 +8,101 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cursoController = void 0;
-const conexion_1 = require("../db/conexion"); //nos conectamos a la base de datos
-const joi_1 = __importDefault(require("joi")); //validaciones con joi
-// const { json } = require("express");
-// const db = require("../database/conexion");
-// const joi = require("joi");
-class CursoController {
-    constructor() { }
-    //INSERTAR CURSO
-    insertar(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, descripcion, profesor_id } = req.body; //obtenemos los datos que vamos a insertar del body
-            //#region Validaciones Joi
-            const valid = joi_1.default.object({
-                nombre: joi_1.default.string().required(),
-                descripcion: joi_1.default.string().required(),
-                profesor_id: joi_1.default.number().integer().required(),
-            });
-            const { error } = valid.validate({ nombre, descripcion, profesor_id });
-            if (error) {
-                return res
-                    .status(400)
-                    .send(`Error de validacion: ${error.details[0].message}`);
-            }
-            //#endregion
-            const sql1 = `SELECT COUNT(*) AS Total FROM profesores WHERE id = ?`;
-            const sql2 = `INSERT INTO cursos (nombre, descripcion, profesor_id) VALUES (?, ?, ?)`;
-            const conex = yield conexion_1.poolDB.getConnection();
-            try {
-                yield conex.beginTransaction();
-                //existe el profesor?
-                const [busca] = yield conex.query(sql1, [profesor_id]);
-                // si el profe no existe:
-                if (busca[0].Total === 0) {
-                    yield conex.rollback();
-                    return res.status(400).json("El profesor no existe");
-                }
-                //si el profe existe
-                const [acto] = yield conex.query(sql2, [
-                    nombre,
-                    descripcion,
-                    profesor_id,
-                ]);
-                if (acto.affectedRows === 1) {
-                    yield conex.commit();
-                    return res.status(201).json({ id: acto.insertId, nombre, descripcion });
-                }
-                else {
-                    yield conex.rollback();
-                    return res.status(400).json("Error al insertar el curso");
-                }
-            }
-            catch (error) {
-                yield conex.rollback();
-                return res
-                    .status(500)
-                    .json({ message: "Error en catch al insertar el curso" });
-            }
-            finally {
-                conex.release();
-            }
+exports.eliminarCurso = exports.modificarCurso = exports.consultarUnCurso = exports.consultarCursos = exports.insertarCurso = void 0;
+const conexion_1 = require("../db/conexion");
+const cursoModels_1 = require("../models/cursoModels");
+const profesorModels_1 = require("../models/profesorModels");
+const cursoRepo = conexion_1.AppDataSource.getRepository(cursoModels_1.Curso);
+const profesorRepo = conexion_1.AppDataSource.getRepository(profesorModels_1.Profesor);
+/**** INSERTAR CURSO ****/
+const insertarCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { nombre, descripcion, profesor_id } = req.body;
+        const profesorId = Number(profesor_id);
+        if (isNaN(profesorId)) {
+            return res.status(400).json({ message: "ID de profesor inválido" });
+        }
+        // Buscar el profesor
+        const profesorEncontrado = yield profesorRepo.findOneBy({
+            id: parseInt(profesor_id),
         });
-    }
-    //CONSULTAR CURSOS
-    consultar(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const sql = `SELECT * FROM cursos`;
-            try {
-                const [busca] = yield conexion_1.poolDB.query(sql);
-                return res.status(200).json(busca);
-            }
-            catch (error) {
-                return res
-                    .status(500)
-                    .json({ message: "Error en catch al consultar los cursos" });
-            }
+        if (!profesorEncontrado) {
+            return res.status(404).json("Profesor no encontrado");
+        }
+        // Crear el curso
+        const curso = cursoRepo.create({
+            nombre,
+            descripcion,
+            profesor: profesorEncontrado,
         });
+        yield cursoRepo.save(curso);
+        return res.status(201).json(curso);
     }
-    //CONSULTAR UN CURSO
-    consultarUno(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            //#region validaciones joi
-            const valid = joi_1.default.object({
-                id: joi_1.default.number().integer().required(),
-            });
-            const { error } = valid.validate({ id });
-            if (error) {
-                return res.status(400).send(`Error de validacion: ${error.message}`);
-            }
-            //#endregion
-            const sql = `SELECT * FROM cursos WHERE id = ?`;
-            try {
-                const [busca] = yield conexion_1.poolDB.query(sql, [id]);
-                if (busca.length === 0) {
-                    return res.status(404).json("Curso no encontrado");
-                }
-                return res.status(200).json(busca[0]);
-            }
-            catch (error) {
-                return res
-                    .status(500)
-                    .json({ message: "Error en catch al consultar el curso" });
-            }
-        });
+    catch (error) {
+        return res.status(500).send(`Error en catch al insertar curso: ${error}`);
     }
-    //MODIFICAR CURSO
-    modificar(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const { nombre, descripcion, profesor_id } = req.body;
-            //#region validaciones joi
-            const valid = joi_1.default.object({
-                id: joi_1.default.number().integer().required(),
-                nombre: joi_1.default.string().required(),
-                descripcion: joi_1.default.string().required(),
-                profesor_id: joi_1.default.number().integer().required(),
-            });
-            const { error } = valid.validate({ id, nombre, descripcion, profesor_id });
-            if (error) {
-                return res
-                    .status(400)
-                    .send(`Error de validacion: ${error.details[0].message}`);
-            }
-            //#endregion
-            const sql1 = `SELECT COUNT(*) AS Total FROM profesores WHERE id = ?`;
-            const sql2 = `UPDATE cursos SET nombre = ?, descripcion = ?, profesor_id = ? WHERE id = ?`;
-            const conex = yield conexion_1.poolDB.getConnection();
-            try {
-                yield conex.beginTransaction();
-                //existe el profesor?
-                const [busca] = yield conex.query(sql1, [profesor_id]);
-                // si el profe no existe:
-                if (busca[0].Total === 0) {
-                    yield conex.rollback();
-                    return res.status(400).json("El profesor no existe");
-                }
-                //si el profe existe
-                const [acto] = yield conex.query(sql2, [
-                    nombre,
-                    descripcion,
-                    profesor_id,
-                    id,
-                ]);
-                // si el curso no existe
-                if (acto.affectedRows === 0) {
-                    yield conex.rollback();
-                    return res.status(400).json("el curso no existe");
-                }
-                else {
-                    // si todo salio bien
-                    yield conex.commit();
-                    return res.status(200).json({ res: "Curso Actualizado!" });
-                }
-            }
-            catch (error) {
-                yield conex.rollback();
-                return res
-                    .status(500)
-                    .json({ message: "Error en catch al modificar el curso" });
-            }
-            finally {
-                conex.release();
-            }
-        });
+});
+exports.insertarCurso = insertarCurso;
+/****  CONSULTAR CURSOS ****/
+const consultarCursos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cursos = yield cursoRepo.find();
+        return res.status(200).json(cursos);
     }
-    //ELIMINAR CURSO
-    eliminar(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            //#region validaciones joi
-            const valid = joi_1.default.object({
-                id: joi_1.default.number().integer().required(),
-            });
-            const { error } = valid.validate({ id });
-            if (error) {
-                return res
-                    .status(400)
-                    .send(`Error de validación: ${error.details[0].message}`);
-            }
-            //#endregion
-            const sql1 = `SELECT COUNT(*) AS Total FROM profesores WHERE id = ?`;
-            const sql2 = `DELETE FROM cursos WHERE id = ?`;
-            const conex = yield conexion_1.poolDB.getConnection();
-            try {
-                yield conex.beginTransaction();
-                const [busca] = yield conex.query(sql1, [id]);
-                if (busca[0].Total > 0) {
-                    yield conex.rollback();
-                    return res
-                        .status(400)
-                        .json("No se puede eliminar el curso, tiene un profesor asignado");
-                }
-                const [acto] = yield conex.query(sql2, [id]);
-                if (acto.affectedRows === 1) {
-                    return res.status(200).json({ res: "Curso Eliminado!" });
-                }
-                else {
-                    return res.status(400).json("el curso no existe");
-                }
-            }
-            catch (error) {
-                return res
-                    .status(500)
-                    .json({ message: "Error en catch al insertar el curso" });
-            }
-        });
+    catch (error) {
+        return res.status(500).send(`Error en catch al consultar cursos: ${error}`);
     }
-}
-exports.cursoController = new CursoController();
-// module.exports = new CursoController();
+});
+exports.consultarCursos = consultarCursos;
+/**** CONSULTAR UN CURSO ****/
+const consultarUnCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const curso = yield cursoRepo.findOneBy({ id: parseInt(req.params.id) });
+        if (!curso) {
+            return res.status(404).json("Curso no encontrado");
+        }
+        return res.status(200).json(curso);
+    }
+    catch (error) {
+        return res
+            .status(500)
+            .send(`Error en catch al consultar el curso: ${error}`);
+    }
+});
+exports.consultarUnCurso = consultarUnCurso;
+/**** MODIFICAR CURSO ****/
+const modificarCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const curso = yield cursoRepo.findOneBy({ id: parseInt(req.params.id) });
+        if (!curso) {
+            return res.status(404).json("Curso no encontrado");
+        }
+        cursoRepo.merge(curso, req.body);
+        yield cursoRepo.save(curso);
+        return res.status(200).json(`Curso ${curso.nombre} modificado`);
+    }
+    catch (error) {
+        return res
+            .status(500)
+            .send(`Error en catch al modificar el curso: ${error}`);
+    }
+});
+exports.modificarCurso = modificarCurso;
+/**** ELIMINAR CURSO ****/
+const eliminarCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const curso = yield cursoRepo.findOneBy({ id: parseInt(req.params.id) });
+        if (!curso) {
+            return res.status(404).json("Curso no encontrado");
+        }
+        yield cursoRepo.remove(curso);
+        return res.status(200).json(`Curso ${curso.nombre} eliminado`);
+    }
+    catch (error) {
+        return res
+            .status(500)
+            .send(`Error en catch al eliminar el curso: ${error}`);
+    }
+});
+exports.eliminarCurso = eliminarCurso;

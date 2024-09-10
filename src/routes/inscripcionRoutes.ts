@@ -1,32 +1,35 @@
 // ARCHIVO DE RUTAS DE INSCRIPCION
 
 import { Router } from "express";
-import { inscripcionController } from "../controller/inscripcionController";
-// import cors from "cors"; - VER DESPUES
+import {
+  consultarInscripciones,
+  insertarInscripcion,
+  modificarNota,
+  eliminarInscripcion,
+  consultarNota,
+  consultarInscripcionesPorCurso,
+  consultarInscripcionesPorEstudiante,
+} from "../controller/inscripcionController";
+
 const routes = Router();
 
-//#region CODIGO VIEJO
-// const express = require("express");
-// const routes = express.Router();
-// const cors = require("cors");
-// const inscripcionController = require("../controller/inscripcionController");
-//#endregion
+// Consultar todas las inscripciones
+routes.get("/", consultarInscripciones);
 
-routes.get("/", inscripcionController.consultar);
-routes.post("/", inscripcionController.insertar);
+// Inscribir alumno en un curso
+routes.post("/", insertarInscripcion);
 
-routes.get(
-  "/estudiante/:estudiante_id",
-  inscripcionController.consultarEstudiante
-);
+// Consultar inscripciones por estudiante
+routes.get("/estudiante/:estudiante_id", consultarInscripcionesPorEstudiante);
 
-routes.get("/curso/:curso_id", inscripcionController.consultarCurso);
+// Consultar inscripciones por curso
+routes.get("/curso/:curso_id", consultarInscripcionesPorCurso);
 
+// Consultar, modificar o eliminar una inscripción específica (por curso y estudiante)
 routes
   .route("/curso/:curso_id/estudiante/:estudiante_id")
-  .get(inscripcionController.consultarNota)
-  .put(inscripcionController.modificar)
-  .delete(inscripcionController.eliminar);
+  .get(consultarNota)
+  .put(modificarNota)
+  .delete(eliminarInscripcion);
 
-// module.exports = routes;
 export default routes;
