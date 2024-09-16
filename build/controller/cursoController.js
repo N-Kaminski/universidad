@@ -47,7 +47,9 @@ exports.insertarCurso = insertarCurso;
 /****  CONSULTAR CURSOS ****/
 const consultarCursos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const cursos = yield cursoRepo.find();
+        const cursos = yield cursoRepo.find({
+            relations: ["profesor"],
+        });
         return res.status(200).json(cursos);
     }
     catch (error) {
@@ -58,7 +60,10 @@ exports.consultarCursos = consultarCursos;
 /**** CONSULTAR UN CURSO ****/
 const consultarUnCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const curso = yield cursoRepo.findOneBy({ id: parseInt(req.params.id) });
+        const curso = yield cursoRepo.findOne({
+            where: { id: parseInt(req.params.id) },
+            relations: ["profesor"],
+        });
         if (!curso) {
             return res.status(404).json("Curso no encontrado");
         }
@@ -74,9 +79,21 @@ exports.consultarUnCurso = consultarUnCurso;
 /**** MODIFICAR CURSO ****/
 const modificarCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const curso = yield cursoRepo.findOneBy({ id: parseInt(req.params.id) });
+        const curso = yield cursoRepo.findOne({
+            where: { id: parseInt(req.params.id) },
+            relations: ["profesor"],
+        });
         if (!curso) {
             return res.status(404).json("Curso no encontrado");
+        }
+        if (req.body.profesor_id) {
+            const profesor = yield profesorRepo.findOneBy({
+                id: req.body.profesor_id,
+            });
+            if (!profesor) {
+                return res.status(404).json("Profesor no encontrado");
+            }
+            curso.profesor = profesor; // Asignar el nuevo profesor
         }
         cursoRepo.merge(curso, req.body);
         yield cursoRepo.save(curso);

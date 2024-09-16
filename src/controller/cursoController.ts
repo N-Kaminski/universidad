@@ -40,7 +40,9 @@ export const insertarCurso = async (req: Request, res: Response) => {
 /****  CONSULTAR CURSOS ****/
 export const consultarCursos = async (req: Request, res: Response) => {
   try {
-    const cursos = await cursoRepo.find();
+    const cursos = await cursoRepo.find({
+      relations: ["profesor"],
+    });
     return res.status(200).json(cursos);
   } catch (error) {
     return res.status(500).send(`Error en catch al consultar cursos: ${error}`);
@@ -50,7 +52,10 @@ export const consultarCursos = async (req: Request, res: Response) => {
 /**** CONSULTAR UN CURSO ****/
 export const consultarUnCurso = async (req: Request, res: Response) => {
   try {
-    const curso = await cursoRepo.findOneBy({ id: parseInt(req.params.id) });
+    const curso = await cursoRepo.findOne({
+      where: { id: parseInt(req.params.id) },
+      relations: ["profesor"],
+    });
     if (!curso) {
       return res.status(404).json("Curso no encontrado");
     }
@@ -65,9 +70,21 @@ export const consultarUnCurso = async (req: Request, res: Response) => {
 /**** MODIFICAR CURSO ****/
 export const modificarCurso = async (req: Request, res: Response) => {
   try {
-    const curso = await cursoRepo.findOneBy({ id: parseInt(req.params.id) });
+    const curso = await cursoRepo.findOne({
+      where: { id: parseInt(req.params.id) },
+      relations: ["profesor"],
+    });
     if (!curso) {
       return res.status(404).json("Curso no encontrado");
+    }
+    if (req.body.profesor_id) {
+      const profesor = await profesorRepo.findOneBy({
+        id: req.body.profesor_id,
+      });
+      if (!profesor) {
+        return res.status(404).json("Profesor no encontrado");
+      }
+      curso.profesor = profesor; // Asignar el nuevo profesor
     }
     cursoRepo.merge(curso, req.body);
     await cursoRepo.save(curso);

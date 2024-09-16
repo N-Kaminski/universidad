@@ -4,26 +4,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const estudianteController_1 = require("../controller/estudianteController");
 const routes = (0, express_1.Router)();
-//#region CODIGO VIEJO
-/*
-const express = require("express");
-const routes = express.Router();
-const estudianteController = require("../controller/estudianteController");
-const cors = require("cors");
-
-routes.get("/", estudianteController.consultar);
-
-routes.post("/", estudianteController.insertar);
-
-routes
-  .route("/:id")
-  .get(estudianteController.consultarUno)
-  .put(estudianteController.modificar)
-  .delete(estudianteController.eliminar);
-
-module.exports = routes;
-*/
-//#endregion
 routes.post("/", estudianteController_1.insertarEstudiante);
 routes.get("/", estudianteController_1.consultarEstudiantes);
 routes

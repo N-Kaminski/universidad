@@ -13,7 +13,6 @@ const port: number = process.env.DB_PORT
   : 3306;
 
 // Función para crear la base de datos si no existe
-//#region oculto la funcion
 async function createDatabaseIfNotExists() {
   try {
     const connection = await createConnection({
@@ -32,7 +31,6 @@ async function createDatabaseIfNotExists() {
     throw error;
   }
 }
-//#endregion
 
 // Configuración de TypeORM
 export const AppDataSource = new DataSource({
@@ -50,7 +48,7 @@ export const AppDataSource = new DataSource({
 // Función para inicializar la base de datos
 export async function initializeDatabase() {
   try {
-    // await createDatabaseIfNotExists();
+    await createDatabaseIfNotExists();
     await AppDataSource.initialize();
     console.log("Base de datos inicializada");
   } catch (error) {

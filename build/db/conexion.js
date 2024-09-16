@@ -46,7 +46,6 @@ const port = process.env.DB_PORT
     ? parseInt(process.env.DB_PORT, 10)
     : 3306;
 // Función para crear la base de datos si no existe
-//#region oculto la funcion
 function createDatabaseIfNotExists() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -66,7 +65,6 @@ function createDatabaseIfNotExists() {
         }
     });
 }
-//#endregion
 // Configuración de TypeORM
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "mysql",
@@ -83,7 +81,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
 function initializeDatabase() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // await createDatabaseIfNotExists();
+            yield createDatabaseIfNotExists();
             yield exports.AppDataSource.initialize();
             console.log("Base de datos inicializada");
         }

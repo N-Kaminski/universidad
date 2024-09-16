@@ -46,8 +46,6 @@ Esta carpeta contiene el código compilado a **JavaScript** del proyecto.
   - `inscripcionRoutes.js`: Rutas para las operaciones CRUD de inscripciones.
   - `profesorRoutes.js`: Rutas para las operaciones CRUD de profesores.
 
-- `/views/`: Carpeta vacía, prevista para vistas en un futuro.
-
 ### `/database/`
 
 - `BD Datos.sql`: Script para poblar las tablas con datos de ejemplo.
@@ -83,7 +81,20 @@ Esta carpeta contiene el código fuente en **TypeScript** del proyecto.
   - `inscripcionRoutes.ts`: Rutas para las operaciones CRUD de inscripciones.
   - `profesorRoutes.ts`: Rutas para las operaciones CRUD de profesores.
 
-- `/views/`: Carpeta vacía, prevista para vistas.
+- `/views/`: Carpeta que contiene las vistas del proyecto.
+
+  - `index.html`: Página principal del proyecto.
+  - `estudiantes.html`: Vista para gestionar estudiantes.
+  - `cursos.html`: Vista para gestionar cursos.
+  - `profesores.html`: Vista para gestionar profesores.
+  - `inscripciones.html`: Vista para gestionar inscripciones.
+
+  Además, en esta carpeta se encuentran los archivos JavaScript correspondientes para la lógica de las vistas:
+
+  - `estudiantes.js`: Lógica de la vista de estudiantes.
+  - `cursos.js`: Lógica de la vista de cursos.
+  - `profesores.js`: Lógica de la vista de profesores.
+  - `inscripciones.js`: Lógica de la vista de inscripciones.
 
 ### Otros archivos importantes:
 

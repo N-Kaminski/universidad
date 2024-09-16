@@ -17,13 +17,16 @@ export const insertarInscripcion = async (req: Request, res: Response) => {
     const estudianteEncontrado = await estudianteRepo.findOneBy({
       id: parseInt(estudiante_id),
     });
-    if (!estudianteEncontrado)
+    if (!estudianteEncontrado) {
       return res.status(404).json("Estudiante no encontrado");
+    }
 
     const cursoEmcontrado = await cursoRepo.findOneBy({
       id: parseInt(curso_id),
     });
-    if (!cursoEmcontrado) return res.status(404).json("Curso no encontrado");
+    if (!cursoEmcontrado) {
+      return res.status(404).json("Curso no encontrado");
+    }
 
     const inscripcion = inscripcionRepo.create({
       estudiante: estudianteEncontrado,
@@ -60,10 +63,11 @@ export const consultarInscripcionesPorCurso = async (
   try {
     const inscripciones = await inscripcionRepo.find({
       where: { curso: { id: parseInt(req.params.curso_id) } },
-      relations: ["estudiante"],
+      relations: ["curso", "estudiante"],
     });
-    if (inscripciones.length === 0)
+    if (inscripciones.length === 0) {
       return res.status(404).json("No hay inscripciones en este curso");
+    }
     return res.status(200).json(inscripciones);
   } catch (error) {
     return res
@@ -80,12 +84,13 @@ export const consultarInscripcionesPorEstudiante = async (
   try {
     const inscripciones = await inscripcionRepo.find({
       where: { estudiante: { id: parseInt(req.params.estudiante_id) } },
-      relations: ["curso"],
+      relations: ["curso", "estudiante"],
     });
-    if (inscripciones.length === 0)
+    if (inscripciones.length === 0) {
       return res
         .status(404)
         .json("El estudiante no está inscrito en ningún curso");
+    }
     return res.status(200).json(inscripciones);
   } catch (error) {
     return res
@@ -113,7 +118,9 @@ export const consultarNota = async (req: Request, res: Response) => {
       relations: ["curso", "estudiante"],
     });
 
-    if (!inscripcion) return res.status(404).json("Inscripción no encontrada");
+    if (!inscripcion) {
+      return res.status(404).json("Inscripción no encontrada");
+    }
     return res.status(200).json({ nota: inscripcion.nota });
   } catch (error) {
     return res.status(500).send(`Error al consultar la nota: ${error}`);
@@ -132,7 +139,9 @@ export const modificarNota = async (req: Request, res: Response) => {
       },
       relations: ["curso", "estudiante"],
     });
-    if (!inscripcion) return res.status(404).json("Inscripción no encontrada");
+    if (!inscripcion) {
+      return res.status(404).json("Inscripción no encontrada");
+    }
 
     inscripcion.nota = req.body.nota;
     await inscripcionRepo.save(inscripcion);
@@ -154,7 +163,9 @@ export const eliminarInscripcion = async (req: Request, res: Response) => {
       },
       relations: ["curso", "estudiante"],
     });
-    if (!inscripcion) return res.status(404).json("Inscripción no encontrada");
+    if (!inscripcion) {
+      return res.status(404).json("Inscripción no encontrada");
+    }
 
     await inscripcionRepo.remove(inscripcion);
     return res.status(200).json("Inscripción eliminada");

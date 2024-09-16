@@ -1,14 +1,3 @@
-//#region CODIGO VIEJO
-/*
-const express = require("express");
-const cors = require("cors"); 
-const estudianteRouters = require("./routers/estudianteRouters");
-const profesorRouters = require("./routers/profesorRouters");
-const cursoRouters = require("./routers/cursoRouters");
- const inscripcionRouters = require("./routers/inscripcionRouters");
-*/
-//#endregion
-
 import express, { Request, Response } from "express";
 import cors from "cors";
 import morgan from "morgan";
@@ -25,7 +14,11 @@ const app = express();
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5500", // Permite solicitudes desde el puerto 5500
+  })
+);
 
 // Ruta principal
 app.get("/", (req: Request, res: Response) => {

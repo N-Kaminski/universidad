@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cursos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Gestión de Cursos</h1>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="estudiantes.html">Estudiantes</a></li>
+            <li><a href="profesores.html">Profesores</a></li>
+            <li><a href="cursos.html">Cursos</a></li>
+            <li><a href="inscripciones.html">Inscripciones</a></li>
+        </ul>
+    </nav>
+
+    <section class="agregarCurso">
+        <h2>Agregar Nuevo Curso</h2>
+        <form id="form-curso">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            <br>
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" required></textarea>
+            <br>
+            <label for="profesor">Profesor:</label>
+            <select id="profesor" name="profesor" required>
+                <!-- Lista de profesores se llenará dinámicamente -->
+            </select>
+            <br>
+            <button type="submit">Agregar Curso</button>
+        </form>
+    </section>
+
+    <section class="tablaCursos">
+        <h2>Lista de Cursos</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Profesor</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-cursos">
+                <!-- DATOS -->
+            </tbody>
+        </table>
+    </section>    
+
+    <footer>
+        <p>Proyecto Gestión Universidad - Creado por: <a href="https://www.linkedin.com/in/nkaminski-profile/">Nicolas Kaminski</a></p>
+    </footer>
+
+    <section id="modal-modificar" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Modificar Curso</h2>
+            <form id="form-modificar">
+                <input type="hidden" id="modificar-id">
+                <label for="modificar-nombre">Nombre:</label>
+                <input type="text" id="modificar-nombre" required>
+                <br>
+                <label for="modificar-descripcion">Descripción:</label>
+                <textarea id="modificar-descripcion" required></textarea>
+                <br>
+                <label for="modificar-profesor">Profesor:</label>
+                <select id="modificar-profesor" required>
+                    <!-- Lista de profesores -->
+                </select>
+                <br>
+                <button type="submit">Guardar cambios</button>
+            </form>
+        </div>
+    </section>
+
+    <script src="cursos.js"></script>
+</body>
+</html>
