@@ -21,80 +21,84 @@
         </ul>
     </nav>
 
-    <section class="inscribir">
-        <h2>Inscribir Estudiante en Curso</h2>
-        <form id="form-inscripcion">
-            <label for="estudiante">Estudiante:</label>
-            <select id="estudiante" name="estudiante" required>
-                <!-- Lista de estudiantes se llenará dinámicamente -->
-            </select>
-            <br>
-            <label for="curso">Curso:</label>
-            <select id="curso" name="curso" required>
-                <!-- Lista de cursos se llenará dinámicamente -->
-            </select>
-            <br>
-            <label for="nota">Nota:</label>
-            <input type="number" id="nota" name="nota" step="0.01" min="0" max="10">
-            <br>
-            <button type="submit">Inscribir</button>
-        </form>
-    </section>
-
-    <section class="consultar">
-        <h2>Consultar Inscripciones</h2>
-        
-        <form id="form-consultar-curso">
-          <label for="consulta-curso">Consultar alumnos por curso:</label>
-          <select id="consulta-curso" name="consulta-curso" required>
-            <!-- Lista de cursos se llenará dinámicamente -->
-          </select>
-          <button type="submit">Consultar</button>
-        </form>
-      
-        <form id="form-consultar-estudiante">
-          <label for="consulta-estudiante">Consultar cursos por estudiante:</label>
-          <select id="consulta-estudiante" name="consulta-estudiante" required>
-            <!-- Lista de estudiantes se llenará dinámicamente -->
-          </select>
-          <button type="submit">Consultar</button>
-        </form>
-      
-        <!-- Nuevo botón para consultar todas las inscripciones -->
-        <button id="consultar-todas">Consultar todas</button>
-      
-        <h2>Lista de Inscripciones</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Curso</th>
-              <th>Estudiante</th>
-              <th>Nota</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="tabla-inscripciones">
-            <!-- DATOS -->
-          </tbody>
-        </table>
+    <div class="container">
+      <section class="inscribir">
+          <h2>INSCRIBIR ESTUDIANTE A CURSO</h2>
+          <form id="form-inscripcion">
+              <label for="estudiante">Estudiante:</label>
+              <select id="estudiante" name="estudiante" required>
+                  <!-- Lista de estudiantes se llenará dinámicamente -->
+              </select>
+              <br>
+              <label for="curso">Curso:</label>
+              <select id="curso" name="curso" required>
+                  <!-- Lista de cursos se llenará dinámicamente -->
+              </select>
+              <br>
+              <label for="nota">Nota:</label>
+              <input type="number" id="nota" name="nota" step="0.01" min="0" max="10">
+              <br>
+              <button type="submit">Inscribir</button>
+          </form>
       </section>
 
-    <section id="modal-modificar-nota" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Modificar Nota</h2>
-            <form id="form-modificar-nota">
-                <input type="hidden" id="modificar-inscripcion-id">
-                <label for="modificar-nota">Nota:</label>
-                <input type="number" id="modificar-nota" step="0.01" min="0" max="10" required>
-                <br>
-                <button type="submit">Guardar cambios</button>
+      <section class="consultar">
+          <h2>CONSULTAR INSCRIPCIONES</h2>
+          
+          <form id="form-consultar-curso">
+            <label for="consulta-curso">Consultar alumnos por curso:</label>
+            <select id="consulta-curso" name="consulta-curso" required>
+              <!-- Lista de cursos se llenará dinámicamente -->
+            </select>
+            <button type="submit">Consultar</button>
+          </form>
+        
+          <form id="form-consultar-estudiante">
+            <label for="consulta-estudiante">Consultar cursos por estudiante:</label>
+            <select id="consulta-estudiante" name="consulta-estudiante" required>
+              <!-- Lista de estudiantes se llenará dinámicamente -->
+            </select>
+            <button type="submit">Consultar</button>
+          </form>
+        
+          <!-- Nuevo botón para consultar todas las inscripciones -->
+           <br>
+          <button id="consultar-todas" class="btn">Consultar todas</button>
+        
+          <h2>LISTA DE INSCRIPCIONES</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>CURSO</th>
+                <th>ESTUDIANTE</th>
+                <th>NOTA</th>
+                <th>ACCIONES</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-inscripciones">
+              <!-- DATOS -->
+            </tbody>
+          </table>
+        </section>
+    </div>
+
+  <section id="modal-modificar-nota" class="modal">
+      <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2>Modificar Nota</h2>
+          <form id="form-modificar-nota">
+              <input type="hidden" id="modificar-inscripcion-id">
+              <label for="modificar-nota">Nota:</label>
+              <input type="number" id="modificar-nota" step="0.01" min="0" max="10" required>
+              <br>
+              <button type="submit">Guardar cambios</button>
             </form>
-        </div>
-    </section>
+      </div>
+  </section>
+
 
     <footer>
-        <p>Proyecto Gestión Universidad - Creado por: <a href="https://www.linkedin.com/in/nkaminski-profile/">Nicolas Kaminski</a></p>
+        <p>Proyecto Gestión Universidad - Desarrollado por: <a href="https://www.linkedin.com/in/nkaminski-profile/">Nicolas Kaminski</a></p>
     </footer>
 
     <script src="inscripciones.js"></script>

@@ -22,44 +22,46 @@
         </ul>
     </nav>
 
-    <section class="agregarCurso">
-        <h2>Agregar Nuevo Curso</h2>
-        <form id="form-curso">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
-            <br>
-            <label for="descripcion">Descripción:</label>
-            <textarea id="descripcion" name="descripcion" required></textarea>
-            <br>
-            <label for="profesor">Profesor:</label>
-            <select id="profesor" name="profesor" required>
-                <!-- Lista de profesores se llenará dinámicamente -->
-            </select>
-            <br>
-            <button type="submit">Agregar Curso</button>
-        </form>
-    </section>
+    <div class="container">
+        <section class="agregarCurso">
+            <h2>AGREGAR NUEVO CURSO</h2>
+            <form id="form-curso">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <br>
+                <label for="descripcion">Descripción:</label>
+                <textarea id="descripcion" name="descripcion" required></textarea>
+                <br>
+                <label for="profesor">Profesor:</label>
+                <select id="profesor" name="profesor" required>
+                    <!-- Lista de profesores se llenará dinámicamente -->
+                </select>
+                <br>
+                <button type="submit">Agregar</button>
+            </form>
+        </section>
 
-    <section class="tablaCursos">
-        <h2>Lista de Cursos</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Profesor</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="tabla-cursos">
-                <!-- DATOS -->
-            </tbody>
-        </table>
-    </section>    
+        <section class="tablaCursos">
+            <h2>LISTA DE CURSOS</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NOMBRE</th>
+                        <th>DESCRIPCION</th>
+                        <th>PROFESOR</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-cursos">
+                    <!-- DATOS -->
+                </tbody>
+            </table>
+        </section>    
+    </div>
 
     <footer>
-        <p>Proyecto Gestión Universidad - Creado por: <a href="https://www.linkedin.com/in/nkaminski-profile/">Nicolas Kaminski</a></p>
+        <p>Proyecto Gestión Universidad - Desarrollado por: <a href="https://www.linkedin.com/in/nkaminski-profile/">Nicolas Kaminski</a></p>
     </footer>
 
     <section id="modal-modificar" class="modal">

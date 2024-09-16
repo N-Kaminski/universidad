@@ -22,54 +22,56 @@
         </ul>
     </nav>
 
-    <section class="agregarProfesor">
-        <h2>Agregar Nuevo Profesor</h2>
-        <form id="form-profesor">
-            <label for="dni">DNI:</label>
-            <input type="text" id="dni" name="dni" required>
-            <br>
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
-            <br>
-            <label for="apellido">Apellido:</label>
-            <input type="text" id="apellido" name="apellido" required>
-            <br>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <br>
-            <label for="profesion">Profesion:</label>
-            <input type="text" id="profesion" name="profesion" required>
-            <br>
-            <label for="telefono">Telefono:</label>
-            <input type="text" id="telefono" name="telefono" required>
-            <br>
-            <button type="submit">Agregar Profesor</button>
-        </form>
-    </section>
+    <div class="container">
+        <section class="agregarProfesor">
+            <h2>AGREGAR NUEVO PROFESOR</h2>
+            <form id="form-profesor">
+                <label for="dni">DNI:</label>
+                <input type="text" id="dni" name="dni" required>
+                <br>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <br>
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" required>
+                <br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <br>
+                <label for="profesion">Profesion:</label>
+                <input type="text" id="profesion" name="profesion" required>
+                <br>
+                <label for="telefono">Telefono:</label>
+                <input type="text" id="telefono" name="telefono" required>
+                <br>
+                <button type="submit">Agregar</button>
+            </form>
+        </section>
 
-    <section class="tablaProfesor">
-        <h2>Lista de Profesores</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>DNI</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Profesion</th>
-                    <th>Telefono</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="tabla-profesores">
-                <!-- DATOS -->
-            </tbody>
-        </table>
-    </section>    
+        <section class="tablaProfesor">
+            <h2>LISTA DE PROFESORES</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>DNI</th>
+                        <th>NOMBRE</th>
+                        <th>APELLIDO</th>
+                        <th>EMAIL</th>
+                        <th>PROFESION</th>
+                        <th>TELEFONO</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-profesores">
+                    <!-- DATOS -->
+                </tbody>
+            </table>
+        </section>   
+    </div> 
 
     <footer>
-        <p>Proyecto Gestion Universidad - Creado por: <a href="https://www.linkedin.com/in/nkaminski-profile/">Nicolas Kaminski</a></p>
+        <p>Proyecto Gestion Universidad - Desarrollado por: <a href="https://www.linkedin.com/in/nkaminski-profile/">Nicolas Kaminski</a></p>
     </footer>
 
     <section id="modal-modificar" class="modal">

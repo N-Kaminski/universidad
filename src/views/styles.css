@@ -1,4 +1,4 @@
-
+/* General */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -8,82 +8,67 @@ body {
 }
 
 header {
-    background-color: #004d99;
+    background-color: #003366;
     color: white;
-    padding: 20px 0;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-h1, h2 {
-    margin: 0;
+    padding: 10px 0;
 }
 
 nav {
     background-color: #333;
-    padding: 10px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 nav ul {
     list-style-type: none;
-    margin: 0;
     padding: 0;
-    text-align: center;
+    margin: 0;
+    display: flex;
+    justify-content: center;
 }
 
 nav ul li {
-    display: inline-block;
     margin: 0 15px;
 }
 
 nav ul li a {
-    text-decoration: none;
     color: white;
+    text-decoration: none;
     padding: 10px 20px;
+    display: inline-block;
     border-radius: 4px;
     transition: background-color 0.3s;
 }
 
 nav ul li a:hover {
     background-color: #575757;
+    border-radius: 4px;
 }
 
-footer {
-    background-color: #004d99;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+h1, h2 {
+    margin: 20px 0;
 }
 
-footer a {
-    color: white;
-    text-decoration: underline;
+/* Encapsula ambas secciones en un contenedor */
+.container {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px; /* Espacio entre el formulario y la tabla */
+    flex-wrap: wrap; /* Permite que los elementos se reorganicen en pantallas pequeñas */
+    padding: 0 20px;
 }
 
-footer a:hover {
-    color: #cce7ff;
-}
-
-
-section {
-    margin: 20px auto;
-    max-width: 1200px;
-    padding: 20px;
+.agregarEstudiante, .agregarCurso, .agregarProfesor, .inscribir{
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
     background-color: white;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-section h2 {
     margin-bottom: 20px;
 }
 
-
+/* Estilos generales para formularios */
 form {
     display: flex;
     flex-direction: column;
@@ -93,122 +78,77 @@ form label {
     margin: 10px 0 5px;
 }
 
-form input, form select, form button {
+form input, form select {
     padding: 10px;
-    font-size: 1rem;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
+    font-size: 1em;
     border-radius: 4px;
-    box-sizing: border-box;
-    width: 100%;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
 }
 
-form button {
-    background-color: #004d99;
+form button, .btn {
+    background-color: #003366;
     color: white;
+    padding: 10px;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 1em;
     transition: background-color 0.3s;
 }
 
-form button:hover {
-    background-color: #003366;
+form button:hover, .btn:hover {
+    background-color: #4e7ba9;
 }
 
+.tablaEstudiante, .tablaCursos, .tablaProfesor, .consultar{
+    flex: 2;
+    min-width: 400px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow-x: auto; /* Solución para tablas largas */
+}
 
+/* Estilos para tablas */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
-table, th, td {
-    border: 1px solid #ddd;
+table th, table td {
     padding: 12px;
     text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-th {
-    background-color: #004d99;
+table th {
+    background-color: #003366;
     color: white;
+    text-align: center;
 }
 
-tbody tr:nth-child(even) {
+/* Bordes superiores redondeados en las esquinas */
+table th:first-child {
+    border-top-left-radius: 8px;
+}
+
+table th:last-child {
+    border-top-right-radius: 8px;
+}
+
+table tbody tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-tbody tr:hover {
+table tbody tr:hover {
     background-color: #e6f7ff;
 }
 
-
-.modal {
-    position: fixed;
-    display: flex;
-    z-index: 1;
-    left: 20%;
-    top: 0;
-    width: 100%;
-    height: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: white;
-    align-items: center;
-    justify-content: center;
-    padding: 30px;
-    border-radius: 10px;
-    width: 90%;
-    animation: fadeIn 0.3s;
-}
-
-.modal-content h2 {
-    margin-top: 0;
-}
-
-.modal-content form {
-    display: flex;
-    flex-direction: column;
-}
-
-.close {
-    color: #aaa;
-    font-size: 36px;
-    font-weight: bold;
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    cursor: pointer;
-}
-
-.close:hover {
-    color: rgb(192, 94, 94);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-
-button {
-    background-color: #004d99;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #003366;
-}
-
-
+/* Estilos para los botones en la tabla */
 .tabla-accion {
     display: flex;
     justify-content: center;
@@ -216,6 +156,88 @@ button:hover {
 }
 
 .tabla-accion button {
-    align-items: center;
+    background-color: #003366;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
+/* Para pantallas pequeñas (móviles), el formulario y la tabla se apilan uno debajo del otro */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .agregarEstudiante, .tablaEstudiante, .agregarCurso, .tablaCursos, .agregarProfesor, .tablaProfesor, .consultar {
+        width: 100%;
+    }
+}
+
+/* Ajustes para listas de profesores y tabla de inscripciones */
+.tablaEstudiante, .tablaProfesor, .tablaCursos, .consultar {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto; /* Permite desplazarse verticalmente si es muy alta */
+}
+
+/* Footer */
+footer {
+    background-color: #003366;
+    text-align: center;
+    padding: 10px;
+    color: #c2d9ef;    
+    margin-top: auto;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus {
+    color: rgb(192, 94, 94);
+    text-decoration: none;
+    cursor: pointer;
+}
