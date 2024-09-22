@@ -5,34 +5,51 @@ import { Estudiante } from "../models/estudianteModels";
 const estudianteRepo = AppDataSource.getRepository(Estudiante);
 
 /**** INSERTAR ESTUDIANTE ****/
-export const insertarEstudiante = async (req: Request, res: Response) => {
+export const insertarEstudiante = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
+    const existeEstudiante: Estudiante | null = await estudianteRepo.findOneBy({
+      dni: req.body.dni,
+    });
+    if (existeEstudiante) {
+      return res.status(400).json({ message: "El estudiante ya existe" });
+    }
     const estudiante = estudianteRepo.create(req.body);
     await estudianteRepo.save(estudiante);
     return res.status(201).json(estudiante);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al insertar Estudiante ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al insertar Estudiante",
+      error: error.message,
+    });
   }
 };
 
 /****  CONSULTAR ESTUDIANTES ****/
-export const consultarEstudiantes = async (req: Request, res: Response) => {
+export const consultarEstudiantes = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const estudiante = await estudianteRepo.find();
+    const estudiante: Estudiante[] = await estudianteRepo.find();
     return res.status(200).json(estudiante);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al consultar estudiantes ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al consultar estudiantes",
+      error: error.message,
+    });
   }
 };
 
 /**** CONSULTAR UN ESTUDIANTE ****/
-export const consultarUnEstudiante = async (req: Request, res: Response) => {
+export const consultarUnEstudiante = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const estudiante = await estudianteRepo.findOneBy({
+    const estudiante: Estudiante | null = await estudianteRepo.findOneBy({
       id: parseInt(req.params.id),
     });
     // Si no se encontro el estudiante con el ID, devolver un error 404
@@ -41,17 +58,21 @@ export const consultarUnEstudiante = async (req: Request, res: Response) => {
     }
     // si se encontro el estudiante, devolvera los datos
     return res.status(200).json(estudiante);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al consultar el estudiante ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al consultar el estudiante",
+      error: error.message,
+    });
   }
 };
 
 /*** MODIFICAR ESTUDIANTE ***/
-export const modificarEstudiante = async (req: Request, res: Response) => {
+export const modificarEstudiante = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const estudiante = await estudianteRepo.findOneBy({
+    const estudiante: Estudiante | null = await estudianteRepo.findOneBy({
       id: parseInt(req.params.id),
     });
     if (!estudiante) {
@@ -60,17 +81,21 @@ export const modificarEstudiante = async (req: Request, res: Response) => {
     estudianteRepo.merge(estudiante, req.body);
     await estudianteRepo.save(estudiante);
     return res.status(200).json(`Estudiante ${estudiante.dni} modificado`);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al modificar el estudiante ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al modificar el estudiante",
+      error: error.message,
+    });
   }
 };
 
 /**** ELIMINAR ESTUDIANTE ****/
-export const eliminarEstudiante = async (req: Request, res: Response) => {
+export const eliminarEstudiante = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const estudiante = await estudianteRepo.findOneBy({
+    const estudiante: Estudiante | null = await estudianteRepo.findOneBy({
       id: parseInt(req.params.id),
     });
     if (!estudiante) {
@@ -78,9 +103,10 @@ export const eliminarEstudiante = async (req: Request, res: Response) => {
     }
     await estudianteRepo.remove(estudiante);
     return res.status(200).json(`Estudiante ${estudiante.dni} eliminado`);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al eliminar el estudiante ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al eliminar el estudiante",
+      error: error.message,
+    });
   }
 };

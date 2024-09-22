@@ -16,14 +16,21 @@ const estudianteRepo = conexion_1.AppDataSource.getRepository(estudianteModels_1
 /**** INSERTAR ESTUDIANTE ****/
 const insertarEstudiante = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const existeEstudiante = yield estudianteRepo.findOneBy({
+            dni: req.body.dni,
+        });
+        if (existeEstudiante) {
+            return res.status(400).json({ message: "El estudiante ya existe" });
+        }
         const estudiante = estudianteRepo.create(req.body);
         yield estudianteRepo.save(estudiante);
         return res.status(201).json(estudiante);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al insertar Estudiante ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al insertar Estudiante",
+            error: error.message,
+        });
     }
 });
 exports.insertarEstudiante = insertarEstudiante;
@@ -34,9 +41,10 @@ const consultarEstudiantes = (req, res) => __awaiter(void 0, void 0, void 0, fun
         return res.status(200).json(estudiante);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al consultar estudiantes ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al consultar estudiantes",
+            error: error.message,
+        });
     }
 });
 exports.consultarEstudiantes = consultarEstudiantes;
@@ -54,9 +62,10 @@ const consultarUnEstudiante = (req, res) => __awaiter(void 0, void 0, void 0, fu
         return res.status(200).json(estudiante);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al consultar el estudiante ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al consultar el estudiante",
+            error: error.message,
+        });
     }
 });
 exports.consultarUnEstudiante = consultarUnEstudiante;
@@ -74,9 +83,10 @@ const modificarEstudiante = (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.status(200).json(`Estudiante ${estudiante.dni} modificado`);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al modificar el estudiante ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al modificar el estudiante",
+            error: error.message,
+        });
     }
 });
 exports.modificarEstudiante = modificarEstudiante;
@@ -93,9 +103,10 @@ const eliminarEstudiante = (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.status(200).json(`Estudiante ${estudiante.dni} eliminado`);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al eliminar el estudiante ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al eliminar el estudiante",
+            error: error.message,
+        });
     }
 });
 exports.eliminarEstudiante = eliminarEstudiante;

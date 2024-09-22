@@ -28,22 +28,36 @@ const insertarInscripcion = (req, res) => __awaiter(void 0, void 0, void 0, func
         if (!estudianteEncontrado) {
             return res.status(404).json("Estudiante no encontrado");
         }
-        const cursoEmcontrado = yield cursoRepo.findOneBy({
+        const cursoEncontrado = yield cursoRepo.findOneBy({
             id: parseInt(curso_id),
         });
-        if (!cursoEmcontrado) {
+        if (!cursoEncontrado) {
             return res.status(404).json("Curso no encontrado");
+        }
+        const inscripcionExistente = yield inscripcionRepo.findOne({
+            where: {
+                curso_id: cursoEncontrado.id,
+                estudiante_id: estudianteEncontrado.id,
+            },
+        });
+        if (inscripcionExistente) {
+            return res.status(400).json({
+                message: "El estudiante ya está inscrito en este curso.",
+            });
         }
         const inscripcion = inscripcionRepo.create({
             estudiante: estudianteEncontrado,
-            curso: cursoEmcontrado,
-            nota,
+            curso: cursoEncontrado,
+            nota: nota || null,
         });
         yield inscripcionRepo.save(inscripcion);
         return res.status(201).json(inscripcion);
     }
     catch (error) {
-        return res.status(500).send(`Error al insertar inscripción: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al insertar inscripción",
+            error: error.message,
+        });
     }
 });
 exports.insertarInscripcion = insertarInscripcion;
@@ -59,7 +73,10 @@ const consultarInscripciones = (req, res) => __awaiter(void 0, void 0, void 0, f
         return res.status(200).json(inscripciones);
     }
     catch (error) {
-        return res.status(500).send(`Error al consultar inscripciones: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al consultar inscripciones",
+            error: error.message,
+        });
     }
 });
 exports.consultarInscripciones = consultarInscripciones;
@@ -78,7 +95,7 @@ const consultarInscripcionesPorCurso = (req, res) => __awaiter(void 0, void 0, v
     catch (error) {
         return res
             .status(500)
-            .send(`Error al consultar inscripciones por curso: ${error}`);
+            .json({ message: "Error en catch al consultar inscripciones", error });
     }
 });
 exports.consultarInscripcionesPorCurso = consultarInscripcionesPorCurso;
@@ -99,7 +116,7 @@ const consultarInscripcionesPorEstudiante = (req, res) => __awaiter(void 0, void
     catch (error) {
         return res
             .status(500)
-            .send(`Error al consultar inscripciones por estudiante: ${error}`);
+            .json({ message: "Error en catch al consultar inscripciones", error });
     }
 });
 exports.consultarInscripcionesPorEstudiante = consultarInscripcionesPorEstudiante;
@@ -125,7 +142,10 @@ const consultarNota = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(200).json({ nota: inscripcion.nota });
     }
     catch (error) {
-        return res.status(500).send(`Error al consultar la nota: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al consultar nota",
+            error: error.message,
+        });
     }
 });
 exports.consultarNota = consultarNota;
@@ -149,7 +169,10 @@ const modificarNota = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(200).json("Nota modificada");
     }
     catch (error) {
-        return res.status(500).send(`Error al modificar la nota: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al modificar nota",
+            error: error.message,
+        });
     }
 });
 exports.modificarNota = modificarNota;
@@ -172,7 +195,10 @@ const eliminarInscripcion = (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.status(200).json("Inscripción eliminada");
     }
     catch (error) {
-        return res.status(500).send(`Error al eliminar la inscripción: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al eliminar la inscripción",
+            error: error.message,
+        });
     }
 });
 exports.eliminarInscripcion = eliminarInscripcion;

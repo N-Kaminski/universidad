@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion Estudiantes</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
@@ -25,7 +27,7 @@
     <div class="container">
         <section class="agregarProfesor">
             <h2>AGREGAR NUEVO PROFESOR</h2>
-            <form id="form-profesor">
+            <form id="form-profesor" novalidate>
                 <label for="dni">DNI:</label>
                 <input type="text" id="dni" name="dni" required>
                 <br>
@@ -78,7 +80,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Modificar Estudiante</h2>
-            <form id="form-modificar">
+            <form id="form-modificar" novalidate>
                 <input type="hidden" id="modificar-id">
 
                 <label for="modificar-dni">DNI:</label>

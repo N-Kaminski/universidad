@@ -16,6 +16,12 @@ const profesorRepo = conexion_1.AppDataSource.getRepository(profesorModels_1.Pro
 /**** INSERTAR PROFESOR ****/
 const insertarProfesor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const existeProfe = yield profesorRepo.findOneBy({
+            dni: req.body.dni,
+        });
+        if (existeProfe) {
+            return res.status(400).json({ message: "El profesor ya existe" });
+        }
         const profesor = profesorRepo.create(req.body);
         yield profesorRepo.save(profesor);
         return res.status(201).json(profesor);
@@ -23,7 +29,7 @@ const insertarProfesor = (req, res) => __awaiter(void 0, void 0, void 0, functio
     catch (error) {
         return res
             .status(500)
-            .send(`Error en catch al insertar Profesor: ${error}`);
+            .json({ message: "Error en catch al insertar Profesor", error: error });
     }
 });
 exports.insertarProfesor = insertarProfesor;
@@ -34,9 +40,10 @@ const consultarProfesores = (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.status(200).json(profesores);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al consultar profesores: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al consultar Profesores",
+            error: error,
+        });
     }
 });
 exports.consultarProfesores = consultarProfesores;
@@ -54,7 +61,7 @@ const consultarUnProfesor = (req, res) => __awaiter(void 0, void 0, void 0, func
     catch (error) {
         return res
             .status(500)
-            .send(`Error en catch al consultar el profesor: ${error}`);
+            .json({ message: "Error en catch al consultar Profesor", error: error });
     }
 });
 exports.consultarUnProfesor = consultarUnProfesor;
@@ -72,9 +79,10 @@ const modificarProfesor = (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(200).json(`Profesor ${profesor.dni} modificado`);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al modificar el profesor: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al modificar el Profesor",
+            error: error,
+        });
     }
 });
 exports.modificarProfesor = modificarProfesor;
@@ -91,9 +99,10 @@ const eliminarProfesor = (req, res) => __awaiter(void 0, void 0, void 0, functio
         return res.status(200).json(`Profesor ${profesor.dni} eliminado`);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al eliminar el profesor: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al eliminar el Profesor",
+            error: error,
+        });
     }
 });
 exports.eliminarProfesor = eliminarProfesor;

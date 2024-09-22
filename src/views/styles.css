@@ -131,6 +131,10 @@ table th {
     text-align: center;
 }
 
+table td {
+    text-align: center;
+}
+
 /* Bordes superiores redondeados en las esquinas */
 table th:first-child {
     border-top-left-radius: 8px;
@@ -148,6 +152,23 @@ table tbody tr:hover {
     background-color: #e6f7ff;
 }
 
+/* Ajustar los íconos dentro de los botones */
+button i {
+    font-size: 1.2em; /* Aumentar o reducir el tamaño del ícono */
+    vertical-align: middle; /* Alinear el ícono verticalmente */
+}
+
+/* Puedes ajustar el tamaño de los botones para hacerlos más pequeños */
+button.btn-eliminar, button.btn-modificar {
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 /* Estilos para los botones en la tabla */
 .tabla-accion {
     display: flex;
@@ -164,6 +185,36 @@ table tbody tr:hover {
     cursor: pointer;
     transition: background-color 0.3s;
 }
+
+/* Estilos generales para los botones de la tabla */
+.tabla-accion button {
+    padding: 8px 12px;
+    font-size: 1em;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: white;
+}
+
+/* Botón "Eliminar" */
+.tabla-accion .btn-eliminar {
+    background-color: rgb(107, 21, 21); 
+}
+
+.tabla-accion .btn-eliminar:hover {
+    background-color: #b32424; 
+}
+
+/* Botón "Modificar" */
+.tabla-accion .btn-modificar {
+    background-color: #145c17;
+}
+
+.tabla-accion .btn-modificar:hover {
+    background-color: #45a049;
+}
+
 
 /* Para pantallas pequeñas (móviles), el formulario y la tabla se apilan uno debajo del otro */
 @media (max-width: 768px) {

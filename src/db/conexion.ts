@@ -41,7 +41,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "universidad",
   entities: [Estudiante, Curso, Profesor, Inscripcion],
-  synchronize: true, // solo para desarrollo
+  synchronize: false, // solo para desarrollo
   // logging: true,
 });
 

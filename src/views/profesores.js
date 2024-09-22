@@ -14,13 +14,102 @@ document.addEventListener("DOMContentLoaded", () => {
     const profesion = document.getElementById("profesion").value;
     const telefono = document.getElementById("telefono").value;
 
-    const nuevoProfesor = { dni, nombre, apellido, email, profesion, telefono };
-    await agregarProfesor(nuevoProfesor);
-    formProfesor.reset();
+    // Llamar a la función de validación
+    const validacionExitosa = validarProfesor(
+      dni,
+      nombre,
+      apellido,
+      email,
+      profesion,
+      telefono
+    );
+
+    if (!validacionExitosa) {
+      return; // Detener la ejecución si hay errores de validación
+    } else {
+      const nuevoProfesor = {
+        dni,
+        nombre,
+        apellido,
+        email,
+        profesion,
+        telefono,
+      };
+      await agregarProfesor(nuevoProfesor);
+      formProfesor.reset();
+    }
   });
 });
 
-// Obtener la lista de profesores
+/**** VALIDACION ****/
+function validarProfesor(dni, nombre, apellido, email, profesion, telefono) {
+  const dniVal = /^\d{8,8}$/; // Solo números, y 8 dígitos
+  const nombreApellidoVal = /^[a-zA-Z\s]{3,50}$/; // Solo letras y espacios
+  const emailVal = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email con formato correcto
+  const telefonoVal = /^\d{10}$/; // Teléfono debe tener exactamente 10 dígitos
+
+  // Validación de campos vacíos
+  if (!dni || !nombre || !apellido || !email) {
+    Swal.fire({
+      icon: "error",
+      title: "Campos incompletos",
+      text: "Por favor, complete todos los campos.",
+    });
+    return false;
+  }
+
+  // Validación de DNI (numérico y de 8 dígitos)
+  if (!dniVal.test(dni)) {
+    Swal.fire({
+      icon: "error",
+      title: "Error en el DNI",
+      text: "El DNI debe ser numérico y tener 8 dígitos.",
+    });
+    return false;
+  }
+
+  // Validación de Nombre (alfabético y no vacío)
+  if (!nombreApellidoVal.test(nombre) || nombre.length < 2) {
+    Swal.fire({
+      icon: "error",
+      title: "Error en el Nombre",
+      text: "El nombre debe ser solo letras",
+    });
+    return false;
+  }
+
+  // Validación de Apellido (igual que Nombre)
+  if (!nombreApellidoVal.test(apellido) || apellido.length < 2) {
+    Swal.fire({
+      icon: "error",
+      title: "Error en el Apellido",
+      text: "El apellido debe ser solo letras",
+    });
+    return false;
+  }
+
+  if (!emailVal.test(email)) {
+    Swal.fire({
+      icon: "error",
+      title: "Error en el Email",
+      text: "Debes ingresar un correo electrónico válido.",
+    });
+    return false;
+  }
+
+  if (!telefonoVal.test(telefono)) {
+    Swal.fire({
+      icon: "error",
+      title: "Error en el Telefono",
+      text: "El telefono debe ser de 10 dígitos.",
+    });
+    return false;
+  }
+
+  return true; // Si todas las validaciones son correctas
+}
+
+/**** OBTENER LISTA DE PROFESORES ****/
 async function obtenerProfesores() {
   try {
     const response = await fetch("http://localhost:3000/profesores", {
@@ -44,8 +133,8 @@ async function obtenerProfesores() {
                 <td>${profesor.profesion}</td>
                 <td>${profesor.telefono}</td>
                 <td class= "tabla-accion">
-                    <button onclick="eliminarProfesor(${profesor.id})">Eliminar</button>
-                    <button onclick="mostrarFormularioModificar(${profesor.id})">Modificar</button>
+                    <button class="btn-modificar" onclick="mostrarFormularioModificar(${profesor.id})"><i class="fas fa-pencil-alt"></i></button>             
+                    <button class="btn-eliminar" onclick="eliminarProfesor(${profesor.id})"><i class="fas fa-times"></i></button>
                 </td>
             `;
       tbody.appendChild(row);
@@ -55,7 +144,7 @@ async function obtenerProfesores() {
   }
 }
 
-// Agregar un nuevo profesor
+/**** AGREGAR PROFESOR ****/
 async function agregarProfesor(profesor) {
   try {
     const response = await fetch("http://localhost:3000/profesores", {
@@ -67,36 +156,69 @@ async function agregarProfesor(profesor) {
     });
 
     if (response.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "Profesor agregado",
+        text: "El profesor ha sido agregado exitosamente.",
+      });
       obtenerProfesores(); // Actualizar la lista de profesores
     } else {
-      console.error("Error al agregar profesor");
+      Swal.fire({
+        icon: "error",
+        title: "Error al agregar profesor",
+        text: "No se pudo agregar el profesor.",
+      });
     }
   } catch (error) {
     console.error("Error al agregar profesor:", error);
   }
 }
 
-// Eliminar un profesor
+/**** ELIMINAR PROFESOR ****/
 async function eliminarProfesor(id) {
-  try {
-    const response = await fetch(`http://localhost:3000/profesores/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  Swal.fire({
+    title: "¿Está seguro?",
+    text: "No podrá revertir esta acción. ¿Desea eliminar al profesor?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#145c17",
+    cancelButtonColor: "#6b1515",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`http://localhost:3000/profesores/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-    if (response.ok) {
-      obtenerProfesores(); // Actualizar la lista después de eliminar
-    } else {
-      console.error("Error al eliminar profesor");
+        if (response.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Profesor eliminado",
+            text: "El profesor ha sido eliminado exitosamente.",
+          });
+          obtenerProfesores(); // Actualizar la lista después de eliminar
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error al eliminar profesor",
+            text: "No se pudo eliminar el profesor.",
+            footer: "Verifique si el profesor se encuentra asignado a un curso",
+          });
+        }
+      } catch (error) {
+        console.error("Error al eliminar profesor:", error);
+      }
     }
-  } catch (error) {
-    console.error("Error al eliminar profesor:", error);
-  }
+  });
 }
 
-// Mostrar el formulario de modificación de profesor con los datos cargados
+/**** MODIFICAR PROFESOR ****/
+//mostrar formulario
 async function mostrarFormularioModificar(id) {
   try {
     const response = await fetch(`http://localhost:3000/profesores/${id}`);
@@ -130,6 +252,20 @@ document
     const profesion = document.getElementById("modificar-profesion").value;
     const telefono = document.getElementById("modificar-telefono").value;
 
+    // Llamar a la función de validación
+    const validacionExitosa = validarProfesor(
+      dni,
+      nombre,
+      apellido,
+      email,
+      profesion,
+      telefono
+    );
+
+    if (!validacionExitosa) {
+      return; // Detener la ejecución si hay errores de validación
+    }
+
     const profesorModificado = {
       dni,
       nombre,
@@ -154,17 +290,26 @@ async function modificarProfesor(id, profesorModificado) {
     });
 
     if (response.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "Profesor modificado",
+        text: "El profesor ha sido modificado exitosamente.",
+      });
       document.getElementById("modal-modificar").style.display = "none";
       await obtenerProfesores(); // Actualizar la lista de profesores
     } else {
-      console.error("Error al modificar el profesor");
+      Swal.fire({
+        icon: "error",
+        title: "Error al modificar",
+        text: "No se pudo modificar el profesor.",
+      });
     }
   } catch (error) {
     console.error("Error al modificar el profesor:", error);
   }
 }
 
-// Cerrar el modal cuando el usuario haga clic fuera del modal
+// Cerrar el pop up cuando el usuario haga clic fuera
 window.onclick = function (event) {
   const modal = document.getElementById("modal-modificar");
   if (event.target === modal) {
@@ -172,7 +317,7 @@ window.onclick = function (event) {
   }
 };
 
-// Cerrar el modal cuando el usuario haga clic en la 'X'
+// Cerrar el pop up cuando el usuario haga clic en la 'X'
 document.querySelector(".close").onclick = function () {
   document.getElementById("modal-modificar").style.display = "none";
 };

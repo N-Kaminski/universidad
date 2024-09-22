@@ -74,7 +74,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     password: process.env.DB_PASSWORD || "",
     database: process.env.DB_NAME || "universidad",
     entities: [estudianteModels_1.Estudiante, cursoModels_1.Curso, profesorModels_1.Profesor, inscripcionModels_1.Inscripcion],
-    synchronize: true, // solo para desarrollo
+    synchronize: false, // solo para desarrollo
     // logging: true,
 });
 // Función para inicializar la base de datos

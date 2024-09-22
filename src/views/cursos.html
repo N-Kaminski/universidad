@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Cursos</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
@@ -25,7 +27,7 @@
     <div class="container">
         <section class="agregarCurso">
             <h2>AGREGAR NUEVO CURSO</h2>
-            <form id="form-curso">
+            <form id="form-curso" novalidate>
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" required>
                 <br>
@@ -68,7 +70,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Modificar Curso</h2>
-            <form id="form-modificar">
+            <form id="form-modificar" novalidate>
                 <input type="hidden" id="modificar-id">
                 <label for="modificar-nombre">Nombre:</label>
                 <input type="text" id="modificar-nombre" required>

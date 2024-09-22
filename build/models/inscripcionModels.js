@@ -25,8 +25,8 @@ __decorate([
     __metadata("design:type", Number)
 ], Inscripcion.prototype, "estudiante_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "float", default: () => 0 }),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)({ type: "int", nullable: true }),
+    __metadata("design:type", Object)
 ], Inscripcion.prototype, "nota", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: "date", default: () => `NOW()` }),

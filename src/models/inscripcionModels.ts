@@ -10,8 +10,8 @@ export class Inscripcion {
   @PrimaryColumn()
   estudiante_id: number;
 
-  @Column({ type: "float", default: () => 0 })
-  nota: number;
+  @Column({ type: "int", nullable: true })
+  nota: number | null;
 
   @Column({ type: "date", default: () => `NOW()` })
   fecha: Date;

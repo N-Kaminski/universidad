@@ -7,52 +7,67 @@ const cursoRepo = AppDataSource.getRepository(Curso);
 const profesorRepo = AppDataSource.getRepository(Profesor);
 
 /**** INSERTAR CURSO ****/
-export const insertarCurso = async (req: Request, res: Response) => {
+export const insertarCurso = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     const { nombre, descripcion, profesor_id } = req.body;
 
-    const profesorId = Number(profesor_id);
+    const profesorId: number = Number(profesor_id);
     if (isNaN(profesorId)) {
       return res.status(400).json({ message: "ID de profesor inválido" });
     }
 
     // Buscar el profesor
-    const profesorEncontrado = await profesorRepo.findOneBy({
+    const profesorEncontrado: Profesor | null = await profesorRepo.findOneBy({
       id: parseInt(profesor_id),
     });
     if (!profesorEncontrado) {
-      return res.status(404).json("Profesor no encontrado");
+      return res.status(404).json({ message: "Profesor no encontrado" });
     }
 
     // Crear el curso
-    const curso = cursoRepo.create({
+    const curso: Curso = cursoRepo.create({
       nombre,
       descripcion,
       profesor: profesorEncontrado,
     });
     await cursoRepo.save(curso);
     return res.status(201).json(curso);
-  } catch (error) {
-    return res.status(500).send(`Error en catch al insertar curso: ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al insertar curso",
+      error: error.message,
+    });
   }
 };
 
 /****  CONSULTAR CURSOS ****/
-export const consultarCursos = async (req: Request, res: Response) => {
+export const consultarCursos = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const cursos = await cursoRepo.find({
+    const cursos: Curso[] = await cursoRepo.find({
       relations: ["profesor"],
     });
     return res.status(200).json(cursos);
-  } catch (error) {
-    return res.status(500).send(`Error en catch al consultar cursos: ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al consultar los cursos",
+      error: error.message,
+    });
   }
 };
 
 /**** CONSULTAR UN CURSO ****/
-export const consultarUnCurso = async (req: Request, res: Response) => {
+export const consultarUnCurso = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const curso = await cursoRepo.findOne({
+    const curso: Curso | null = await cursoRepo.findOne({
       where: { id: parseInt(req.params.id) },
       relations: ["profesor"],
     });
@@ -60,17 +75,21 @@ export const consultarUnCurso = async (req: Request, res: Response) => {
       return res.status(404).json("Curso no encontrado");
     }
     return res.status(200).json(curso);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al consultar el curso: ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al consultar el curso",
+      error: error.message,
+    });
   }
 };
 
 /**** MODIFICAR CURSO ****/
-export const modificarCurso = async (req: Request, res: Response) => {
+export const modificarCurso = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const curso = await cursoRepo.findOne({
+    const curso: Curso | null = await cursoRepo.findOne({
       where: { id: parseInt(req.params.id) },
       relations: ["profesor"],
     });
@@ -78,7 +97,7 @@ export const modificarCurso = async (req: Request, res: Response) => {
       return res.status(404).json("Curso no encontrado");
     }
     if (req.body.profesor_id) {
-      const profesor = await profesorRepo.findOneBy({
+      const profesor: Profesor | null = await profesorRepo.findOneBy({
         id: req.body.profesor_id,
       });
       if (!profesor) {
@@ -89,25 +108,31 @@ export const modificarCurso = async (req: Request, res: Response) => {
     cursoRepo.merge(curso, req.body);
     await cursoRepo.save(curso);
     return res.status(200).json(`Curso ${curso.nombre} modificado`);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al modificar el curso: ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al modificar el curso",
+      error: error.message,
+    });
   }
 };
 
 /**** ELIMINAR CURSO ****/
-export const eliminarCurso = async (req: Request, res: Response) => {
+export const eliminarCurso = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const curso = await cursoRepo.findOneBy({ id: parseInt(req.params.id) });
+    const curso: Curso | null = await cursoRepo.findOneBy({
+      id: parseInt(req.params.id),
+    });
     if (!curso) {
       return res.status(404).json("Curso no encontrado");
     }
     await cursoRepo.remove(curso);
     return res.status(200).json(`Curso ${curso.nombre} eliminado`);
-  } catch (error) {
+  } catch (error: any) {
     return res
       .status(500)
-      .send(`Error en catch al eliminar el curso: ${error}`);
+      .json({ message: "Error en catch al eliminar el curso", error: error });
   }
 };

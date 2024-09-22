@@ -5,51 +5,70 @@ import { Profesor } from "../models/profesorModels";
 const profesorRepo = AppDataSource.getRepository(Profesor);
 
 /**** INSERTAR PROFESOR ****/
-export const insertarProfesor = async (req: Request, res: Response) => {
+export const insertarProfesor = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
+    const existeProfe: Profesor | null = await profesorRepo.findOneBy({
+      dni: req.body.dni,
+    });
+    if (existeProfe) {
+      return res.status(400).json({ message: "El profesor ya existe" });
+    }
     const profesor = profesorRepo.create(req.body);
     await profesorRepo.save(profesor);
     return res.status(201).json(profesor);
-  } catch (error) {
+  } catch (error: any) {
     return res
       .status(500)
-      .send(`Error en catch al insertar Profesor: ${error}`);
+      .json({ message: "Error en catch al insertar Profesor", error: error });
   }
 };
 
 /**** CONSULTAR PROFESORES ****/
-export const consultarProfesores = async (req: Request, res: Response) => {
+export const consultarProfesores = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const profesores = await profesorRepo.find();
+    const profesores: Profesor[] = await profesorRepo.find();
     return res.status(200).json(profesores);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al consultar profesores: ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al consultar Profesores",
+      error: error,
+    });
   }
 };
 
 /**** CONSULTAR UN PROFESOR ****/
-export const consultarUnProfesor = async (req: Request, res: Response) => {
+export const consultarUnProfesor = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const profesor = await profesorRepo.findOneBy({
+    const profesor: Profesor | null = await profesorRepo.findOneBy({
       id: parseInt(req.params.id),
     });
     if (!profesor) {
       return res.status(404).json("Profesor no encontrado");
     }
     return res.status(200).json(profesor);
-  } catch (error) {
+  } catch (error: any) {
     return res
       .status(500)
-      .send(`Error en catch al consultar el profesor: ${error}`);
+      .json({ message: "Error en catch al consultar Profesor", error: error });
   }
 };
 
 /**** MODIFICAR PROFESOR ****/
-export const modificarProfesor = async (req: Request, res: Response) => {
+export const modificarProfesor = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const profesor = await profesorRepo.findOneBy({
+    const profesor: Profesor | null = await profesorRepo.findOneBy({
       id: parseInt(req.params.id),
     });
     if (!profesor) {
@@ -58,17 +77,21 @@ export const modificarProfesor = async (req: Request, res: Response) => {
     profesorRepo.merge(profesor, req.body);
     await profesorRepo.save(profesor);
     return res.status(200).json(`Profesor ${profesor.dni} modificado`);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al modificar el profesor: ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al modificar el Profesor",
+      error: error,
+    });
   }
 };
 
 /**** ELIMINAR PROFESOR ****/
-export const eliminarProfesor = async (req: Request, res: Response) => {
+export const eliminarProfesor = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
-    const profesor = await profesorRepo.findOneBy({
+    const profesor: Profesor | null = await profesorRepo.findOneBy({
       id: parseInt(req.params.id),
     });
     if (!profesor) {
@@ -76,9 +99,10 @@ export const eliminarProfesor = async (req: Request, res: Response) => {
     }
     await profesorRepo.remove(profesor);
     return res.status(200).json(`Profesor ${profesor.dni} eliminado`);
-  } catch (error) {
-    return res
-      .status(500)
-      .send(`Error en catch al eliminar el profesor: ${error}`);
+  } catch (error: any) {
+    return res.status(500).json({
+      message: "Error en catch al eliminar el Profesor",
+      error: error,
+    });
   }
 };

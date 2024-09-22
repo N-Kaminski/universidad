@@ -11,18 +11,31 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("form-inscripcion")
     .addEventListener("submit", async (event) => {
-      event.preventDefault(); // Prevenir que el formulario recargue la página
+      event.preventDefault();
 
       // Obtener los valores seleccionados del formulario
       const estudiante_id = document.getElementById("estudiante").value;
       const curso_id = document.getElementById("curso").value;
       const nota = document.getElementById("nota").value;
 
-      // Preparar el objeto con los datos de inscripción
-      const inscripcion = { estudiante_id, curso_id, nota };
-
-      await inscribirEstudiante(inscripcion);
-      document.getElementById("form-inscripcion").reset();
+      // Validar los campos del formulario de inscripción
+      const validacionExitosa = validarInscripcion(
+        estudiante_id,
+        curso_id,
+        nota
+      );
+      if (!validacionExitosa) {
+        return;
+      } else {
+        // Preparar el objeto con los datos de inscripción
+        const inscripcion = {
+          estudiante_id,
+          curso_id,
+          nota: nota ? nota : null,
+        };
+        await inscribirEstudiante(inscripcion);
+        document.getElementById("form-inscripcion").reset();
+      }
     });
 
   // CONSULTAR INSCRIPCIONES boton
@@ -50,7 +63,58 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// OBTENER Y MOSTRAR LAS INSCRIPCIONES
+/**** VALIDACION ****/
+function validarInscripcion(estudiante_id, curso_id, nota) {
+  const estudianteVal = /^\d+$/;
+  const cursoVal = /^\d+$/;
+  const notaVal = /^\d+$/;
+
+  if (!estudianteVal.test(estudiante_id)) {
+    Swal.fire({
+      icon: "error",
+      title: "Estudiante inválido",
+      text: "El estudiante no existe.",
+    });
+    return false;
+  }
+
+  if (!cursoVal.test(curso_id)) {
+    Swal.fire({
+      icon: "error",
+      title: "Curso inválido",
+      text: "El curso no existe.",
+    });
+    return false;
+  }
+
+  // if (!notaVal.test(nota) || nota !== null) {
+  if (nota && (isNaN(nota) || nota < 1 || nota > 10)) {
+    Swal.fire({
+      icon: "error",
+      title: "Error en la inscripción",
+      text: "La nota, si se proporciona, debe estar entre 1 y 10.",
+    });
+    return false;
+  }
+
+  return true;
+}
+
+function validarNota(nota) {
+  const notaVal = /^\d+$/;
+
+  if (!nota || isNaN(nota) || nota < 1 || nota > 10 || !notaVal.test(nota)) {
+    Swal.fire({
+      icon: "error",
+      title: "Nota inválida",
+      text: "La nota debe estar entre 1 y 10.",
+    });
+    return;
+  }
+  return true;
+}
+
+/**** OBTENER INSCRIPCIONES ****/
 async function obtenerInscripciones() {
   try {
     const response = await fetch("http://localhost:3000/inscripciones"); // URL de tu backend
@@ -61,7 +125,7 @@ async function obtenerInscripciones() {
   }
 }
 
-// CARGAR CURSOS EN CONSULTAS
+/**** CARGAR CURSOS EN CONSULTAS ****/
 async function cargarCursosConsultas() {
   try {
     const response = await fetch("http://localhost:3000/cursos"); // URL de tu backend
@@ -80,7 +144,7 @@ async function cargarCursosConsultas() {
   }
 }
 
-// CARGAR ESTUDIANTES EN CONSULTAS
+/**** CARGAR ESTUDIANTES EN CONSULTAS ****/
 async function cargarEstudiantesConsultas() {
   try {
     const response = await fetch("http://localhost:3000/estudiantes"); // URL de tu backend
@@ -98,7 +162,7 @@ async function cargarEstudiantesConsultas() {
   }
 }
 
-// CARGAR CURSOS EN INSCRIPCIONES
+/**** CARGAR CURSOS EN INSCRIPCIONES ****/
 async function cargarCursosInscribir() {
   try {
     const response = await fetch("http://localhost:3000/cursos"); // URL de tu backend
@@ -117,7 +181,7 @@ async function cargarCursosInscribir() {
   }
 }
 
-// CARGAR ESTUDIANTES EN INSCRIPCIONES
+/**** CARGAR ESTUDIANTES EN INSCRIPCIONES ****/
 async function cargarEstudiantesInscribir() {
   try {
     const response = await fetch("http://localhost:3000/estudiantes"); // URL de tu backend
@@ -135,7 +199,7 @@ async function cargarEstudiantesInscribir() {
   }
 }
 
-// LLENAR TABLA DE INSCRIPCIONES
+/**** LLENAR TABLA DE INSCRIPCIONES ****/
 function llenarTablaInscripciones(inscripciones) {
   const tablaInscripciones = document.getElementById("tabla-inscripciones");
   tablaInscripciones.innerHTML = ""; // Limpiar la tabla antes de rellenarla
@@ -163,8 +227,8 @@ function llenarTablaInscripciones(inscripciones) {
     }</td>
       <td>${inscripcion.nota || "No asignada"}</td>
       <td class="tabla-accion">
-        <button onclick="modificarNota(${curso_id}, ${estudiante_id})">Modificar Nota</button>
-        <button onclick="eliminarInscripcion(${curso_id}, ${estudiante_id})">Eliminar</button>
+        <button class="btn-modificar" onclick="modificarNota(${curso_id}, ${estudiante_id})"><i class="fas fa-pencil-alt"></i></button>
+        <button class="btn-eliminar" onclick="eliminarInscripcion(${curso_id}, ${estudiante_id})"><i class="fas fa-times"></i></button>
       </td>
     `;
 
@@ -172,7 +236,7 @@ function llenarTablaInscripciones(inscripciones) {
   });
 }
 
-// OBTENER ALUMNOS POR CURSO
+/**** OBTENER INSCRIPCIONES POR CURSO ****/
 async function obtenerInscripcionesPorCurso(curso_id) {
   try {
     const response = await fetch(
@@ -183,8 +247,11 @@ async function obtenerInscripcionesPorCurso(curso_id) {
       const inscripciones = await response.json();
       llenarTablaInscripciones(inscripciones);
     } else if (response.status === 404) {
-      // Si el curso no tiene inscripciones, llenamos la tabla con un array vacío
-      console.warn("No se encontraron inscripciones para este curso.");
+      Swal.fire({
+        icon: "warning",
+        title: "Sin inscripciones",
+        text: "No se encontraron alumnos inscriptos para este curso.",
+      });
       llenarTablaInscripciones([]); // Pasar un array vacío
     } else {
       throw new Error("Error inesperado al obtener inscripciones.");
@@ -194,7 +261,7 @@ async function obtenerInscripcionesPorCurso(curso_id) {
   }
 }
 
-// OBTENER CURSOS POR ESTUDIANTE
+/**** OBTENER INSCRIPCIONES POR ESTUDIANTE ****/
 async function obtenerInscripcionesPorEstudiante(estudiante_id) {
   try {
     const response = await fetch(
@@ -205,7 +272,11 @@ async function obtenerInscripcionesPorEstudiante(estudiante_id) {
       const inscripciones = await response.json();
       llenarTablaInscripciones(inscripciones);
     } else if (response.status === 404) {
-      console.warn("No se encontraron inscripciones para este estudiante.");
+      Swal.fire({
+        icon: "warning",
+        title: "Sin inscripciones",
+        text: "No se encontraron inscripciones para este estudiante.",
+      });
       llenarTablaInscripciones([]); // Pasar un array vacío
     } else {
       throw new Error("Error inesperado al obtener inscripciones.");
@@ -215,7 +286,7 @@ async function obtenerInscripcionesPorEstudiante(estudiante_id) {
   }
 }
 
-// INSCRIBIR ALUMNO POST
+/**** INSCRIBIR ESTUDIANTE ****/
 async function inscribirEstudiante(inscripcion) {
   try {
     const response = await fetch("http://localhost:3000/inscripciones", {
@@ -224,48 +295,80 @@ async function inscribirEstudiante(inscripcion) {
       body: JSON.stringify(inscripcion), // Convertir los datos a JSON
     });
 
+    const result = await response.json();
+
     if (response.ok) {
-      alert("Inscripción realizada correctamente.");
+      Swal.fire({
+        icon: "success",
+        title: "Inscripción realizada",
+        text: "La inscripción ha sido realizada correctamente.",
+      });
       obtenerInscripciones(); // Recargar la lista de inscripciones
+    } else if (
+      result.message === "El estudiante ya está inscrito en este curso."
+    ) {
+      Swal.fire({
+        icon: "warning",
+        title: "No se puede inscribir",
+        text: "El estudiante ya está inscrito en este curso.",
+      });
     } else {
-      console.error("Error al inscribir estudiante");
-      alert("Hubo un problema al inscribir al estudiante.");
+      Swal.fire({
+        icon: "error",
+        title: "Error al inscribir",
+        text: "Hubo un problema al inscribir al estudiante.",
+      });
     }
   } catch (error) {
     console.error("Error al inscribir estudiante:", error);
-    alert("Hubo un error al intentar inscribir al estudiante.");
   }
 }
 
-// ELIMINAR INSCRIPCION DELETE
+/**** ELIMINAR INSCRIPCION ****/
 async function eliminarInscripcion(curso_id, estudiante_id) {
-  try {
-    const response = await fetch(
-      `http://localhost:3000/inscripciones/curso/${curso_id}/estudiante/${estudiante_id}`,
-      {
-        method: "DELETE",
-        /*headers: {
-        "Content-Type": "application/json",
-      },*/
+  Swal.fire({
+    title: "¿Está seguro?",
+    text: "No podrá revertir esta acción. ¿Desea eliminar la inscripción?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#145c17",
+    cancelButtonColor: "#6b1515",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/inscripciones/curso/${curso_id}/estudiante/${estudiante_id}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (response.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Inscripción eliminada",
+            text: "La inscripción ha sido eliminada correctamente.",
+          });
+          obtenerInscripciones(); // Recargar la lista de inscripciones
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error al eliminar",
+            text: "Hubo un problema al eliminar la inscripción.",
+          });
+        }
+      } catch (error) {
+        console.error("Error al eliminar inscripción:", error);
       }
-    );
-    if (response.ok) {
-      alert("Inscripción eliminada correctamente.");
-      obtenerInscripciones(); // Recargar la lista de inscripciones
-    } else {
-      console.error("Error al eliminar inscripción");
-      alert("Hubo un problema al eliminar la inscripción.");
     }
-  } catch (error) {
-    console.error("Error al eliminar inscripción:", error);
-    alert("Hubo un error al intentar eliminar la inscripción.");
-  }
+  });
 }
 
 /*-------------------------- */
-// ABRIR POPAP Y MODIFICAR NOTA
+/**** MODIFICAR NOTA + POP UP ****/
 function modificarNota(curso_id, estudiante_id) {
-  // Abrir el modal
+  // Abrir el pop up
   const modal = document.getElementById("modal-modificar-nota");
   modal.style.display = "block";
 
@@ -289,7 +392,7 @@ function modificarNota(curso_id, estudiante_id) {
     });
 }
 
-// Cerrar el modal cuando se hace click en la "X"
+// Cerrar el pop up cuando se hace click en la "X"
 document.querySelector(".close").addEventListener("click", () => {
   document.getElementById("modal-modificar-nota").style.display = "none";
 });
@@ -304,6 +407,11 @@ document
       document.getElementById("modificar-inscripcion-id").value
     );
     const nuevaNota = document.getElementById("modificar-nota").value;
+
+    // Validación: la nota no debe estar vacía y debe ser un número entre 1 y 10
+    if (!validarNota(nuevaNota)) {
+      return;
+    }
 
     const data = {
       curso_id,
@@ -322,15 +430,21 @@ document
       );
 
       if (response.ok) {
-        alert("Nota modificada correctamente.");
-        document.getElementById("modal-modificar-nota").style.display = "none"; // Cerrar modal
+        Swal.fire({
+          icon: "success",
+          title: "Nota modificada",
+          text: "La nota ha sido modificada correctamente.",
+        });
+        document.getElementById("modal-modificar-nota").style.display = "none"; // Cerrar el pop up
         obtenerInscripciones(); // Refrescar tabla de inscripciones
       } else {
-        console.error("Error al modificar la nota.");
-        alert("Hubo un problema al modificar la nota.");
+        Swal.fire({
+          icon: "error",
+          title: "Error al modificar la nota",
+          text: "Hubo un problema al modificar la nota.",
+        });
       }
     } catch (error) {
       console.error("Error en la solicitud de modificación:", error);
-      alert("Hubo un error al intentar modificar la nota.");
     }
   });

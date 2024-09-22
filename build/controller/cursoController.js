@@ -28,7 +28,7 @@ const insertarCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             id: parseInt(profesor_id),
         });
         if (!profesorEncontrado) {
-            return res.status(404).json("Profesor no encontrado");
+            return res.status(404).json({ message: "Profesor no encontrado" });
         }
         // Crear el curso
         const curso = cursoRepo.create({
@@ -40,7 +40,10 @@ const insertarCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(201).json(curso);
     }
     catch (error) {
-        return res.status(500).send(`Error en catch al insertar curso: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al insertar curso",
+            error: error.message,
+        });
     }
 });
 exports.insertarCurso = insertarCurso;
@@ -53,7 +56,10 @@ const consultarCursos = (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.status(200).json(cursos);
     }
     catch (error) {
-        return res.status(500).send(`Error en catch al consultar cursos: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al consultar los cursos",
+            error: error.message,
+        });
     }
 });
 exports.consultarCursos = consultarCursos;
@@ -70,9 +76,10 @@ const consultarUnCurso = (req, res) => __awaiter(void 0, void 0, void 0, functio
         return res.status(200).json(curso);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al consultar el curso: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al consultar el curso",
+            error: error.message,
+        });
     }
 });
 exports.consultarUnCurso = consultarUnCurso;
@@ -100,16 +107,19 @@ const modificarCurso = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(200).json(`Curso ${curso.nombre} modificado`);
     }
     catch (error) {
-        return res
-            .status(500)
-            .send(`Error en catch al modificar el curso: ${error}`);
+        return res.status(500).json({
+            message: "Error en catch al modificar el curso",
+            error: error.message,
+        });
     }
 });
 exports.modificarCurso = modificarCurso;
 /**** ELIMINAR CURSO ****/
 const eliminarCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const curso = yield cursoRepo.findOneBy({ id: parseInt(req.params.id) });
+        const curso = yield cursoRepo.findOneBy({
+            id: parseInt(req.params.id),
+        });
         if (!curso) {
             return res.status(404).json("Curso no encontrado");
         }
@@ -119,7 +129,7 @@ const eliminarCurso = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     catch (error) {
         return res
             .status(500)
-            .send(`Error en catch al eliminar el curso: ${error}`);
+            .json({ message: "Error en catch al eliminar el curso", error: error });
     }
 });
 exports.eliminarCurso = eliminarCurso;

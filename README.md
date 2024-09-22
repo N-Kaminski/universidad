@@ -11,6 +11,8 @@ Este proyecto es una aplicación web para gestionar la información universitari
 - **Express.js**: Framework para crear la API REST.
 - **MySQL**: Base de datos utilizada para almacenar la información.
 - **Node.js**: Entorno de ejecución para el servidor.
+- **express-validator**: Middleware para validaciones.
+- **sweetalert2**: Para los mensajes de alerta en el frontend.
 
 ## Estructura del Proyecto
 
@@ -31,6 +33,10 @@ Esta carpeta contiene el código compilado a **JavaScript** del proyecto.
 
   - `conexion.js`: Archivo de configuración de la conexión a la base de datos.
   - `configDB.js`: Archivo de configuración detallada de la base de datos.
+
+- `/middlewares/`: Contiene el middleware para validar los datos.
+
+  - `validarCampos.js`: Middleware que maneja los errores de validación verificando si alguna de las validaciones definidas en las rutas falló.
 
 - `/models/`: Modelos de datos generados por TypeORM.
 
@@ -67,6 +73,10 @@ Esta carpeta contiene el código fuente en **TypeScript** del proyecto.
   - `conexion.ts`: Archivo de configuración de la conexión a la base de datos utilizando `mysql2/promise`.
   - `configDB.ts`: Archivo de configuración detallada de la base de datos.
 
+- `/middlewares/`: Contiene el middleware para validar los datos.
+
+  - `validarCampos.ts`: Middleware que maneja los errores de validación verificando si alguna de las validaciones definidas en las rutas falló.
+
 - `/models/`: Modelos de datos definidos usando **TypeORM**.
 
   - `cursoModels.ts`: Modelo de Curso.
@@ -96,6 +106,10 @@ Esta carpeta contiene el código fuente en **TypeScript** del proyecto.
   - `profesores.js`: Lógica de la vista de profesores.
   - `inscripciones.js`: Lógica de la vista de inscripciones.
 
+  Y, también el archivo css para los estilos del proyecto:
+
+  - `styles.css`: Estilos para el diseño de las vistas.
+
 ### Otros archivos importantes:
 
 - `.env`: Archivo de configuración de entorno con variables sensibles como credenciales de base de datos.
@@ -104,6 +118,44 @@ Esta carpeta contiene el código fuente en **TypeScript** del proyecto.
 - `tsconfig.json`: Archivo de configuración de TypeScript.
 - `.gitignore`: Archivo para ignorar directorios y archivos innecesarios en el repositorio.
 - `readme.md`: Este archivo que estás leyendo.
+
+## Endpoints de la API
+
+Listado de los endpoints de la API para cada entidad gestionada por el sistema.
+
+### Estudiantes
+
+- **GET** `/api/estudiantes`: Obtiene una lista de todos los estudiantes.
+- **GET** `/api/estudiantes/:id`: Obtiene los datos de un estudiante específico mediante su ID.
+- **POST** `/api/estudiantes`: Crea un nuevo estudiante.
+- **PUT** `/api/estudiantes/:id`: Actualiza los datos de un estudiante específico.
+- **DELETE** `/api/estudiantes/:id`: Elimina a un estudiante por su ID.
+
+### Profesores
+
+- **GET** `/api/profesores`: Obtiene una lista de todos los profesores.
+- **GET** `/api/profesores/:id`: Obtiene los detalles de un profesor específico.
+- **POST** `/api/profesores`: Crea un nuevo profesor.
+- **PUT** `/api/profesores/:id`: Actualiza un profesor existente.
+- **DELETE** `/api/profesores/:id`: Elimina a un profesor por su ID.
+
+### Cursos
+
+- **GET** `/api/cursos`: Obtiene una lista de todos los cursos.
+- **GET** `/api/cursos/:id`: Obtiene los detalles de un curso específico.
+- **POST** `/api/cursos`: Crea un nuevo curso.
+- **PUT** `/api/cursos/:id`: Actualiza un curso existente.
+- **DELETE** `/api/cursos/:id`: Elimina un curso por su ID.
+
+### Inscripciones (Relación Curso-Estudiante)
+
+- **GET** `/api/inscripciones`: Obtiene una lista de todas las inscripciones (relaciones entre cursos y estudiantes).
+- **GET** `/api/inscripciones/cursos/:id`: Obtiene una lista de los alumnos inscriptos a un curso determinado.
+- **GET** `/api/inscripciones/estudiante/:estudiante_id`: Obtiene una lista de los cursos que realiza un estudiante determinado.
+- **GET** `/api/inscripciones/cursos/:id/estudiante/:estudiante_id`: Obtiene las notas relacionando curso con estudiante.
+- **POST** `/api/inscripciones`: Crea una nueva inscripción, vinculando un estudiante a un curso.
+- **PUT** `/api/inscripciones/cursos/:id/estudiante/:estudiante_id`: Actualiza los detalles de una inscripción específica (por ejemplo, la calificación obtenida por un alumno en el curso).
+- **DELETE** `/api/cursos/inscripciones/:id/estudiante/:estudiante_id`: Elimina una inscripción, desvinculando al estudiante del curso.
 
 ## Nota
 
