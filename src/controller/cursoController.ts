@@ -103,7 +103,7 @@ export const modificarCurso = async (
       if (!profesor) {
         return res.status(404).json("Profesor no encontrado");
       }
-      curso.profesor = profesor; // Asignar el nuevo profesor
+      curso.profesor = profesor;
     }
     cursoRepo.merge(curso, req.body);
     await cursoRepo.save(curso);

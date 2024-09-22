@@ -1,7 +1,6 @@
 document.getElementById("modal-modificar").style.display = "none";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Obtener y mostrar la lista de estudiantes al cargar la página
   obtenerEstudiantes();
 
   // Agregar estudiante
@@ -93,7 +92,7 @@ async function obtenerEstudiantes() {
     });
     const estudiantes = await response.json();
     const tbody = document.querySelector("#tabla-estudiantes");
-    tbody.innerHTML = ""; // Limpiar la tabla antes de añadir nuevos datos
+    tbody.innerHTML = "";
 
     estudiantes.forEach((estudiante) => {
       const row = document.createElement("tr");
@@ -132,7 +131,7 @@ async function agregarEstudiante(estudiante) {
         title: "Estudiante agregado",
         text: "El estudiante ha sido agregado exitosamente.",
       });
-      obtenerEstudiantes(); // Actualizar la lista de estudiantes
+      obtenerEstudiantes();
     } else {
       Swal.fire({
         icon: "error",
@@ -176,7 +175,7 @@ async function eliminarEstudiante(id) {
             text: "El estudiante ha sido eliminado exitosamente.",
             timer: 1500,
           });
-          obtenerEstudiantes(); // Actualizar la lista después de eliminar
+          obtenerEstudiantes();
         } else {
           Swal.fire({
             icon: "error",
@@ -193,6 +192,7 @@ async function eliminarEstudiante(id) {
 }
 
 /**** MODIFICAR ESTUDIANTE ****/
+//mostrar formulario
 async function mostrarFormularioModificar(id) {
   try {
     const response = await fetch(`http://localhost:3000/estudiantes/${id}`);
@@ -224,11 +224,10 @@ document
     const apellido = document.getElementById("modificar-apellido").value;
     const email = document.getElementById("modificar-email").value;
 
-    // Llamar a la función de validación
     const validacionExitosa = validarEstudiante(dni, nombre, apellido, email);
 
     if (!validacionExitosa) {
-      return; // Detener la ejecución si hay errores de validación
+      return;
     }
     const estudianteModificado = { dni, nombre, apellido, email };
     await modificarEstudiante(id, estudianteModificado);

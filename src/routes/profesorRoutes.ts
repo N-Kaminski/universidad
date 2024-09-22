@@ -35,11 +35,7 @@ routes.post(
 );
 
 routes.get("/", consultarProfesores);
-routes
-  .route("/:id")
-  .get(consultarUnProfesor)
-  // .put(modificarProfesor)
-  .delete(eliminarProfesor);
+routes.route("/:id").get(consultarUnProfesor).delete(eliminarProfesor);
 
 routes.put(
   "/:id",

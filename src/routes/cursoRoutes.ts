@@ -31,11 +31,7 @@ routes.post(
 
 routes.get("/", consultarCursos);
 
-routes
-  .route("/:id")
-  .get(consultarUnCurso)
-  // .put(modificarCurso)
-  .delete(eliminarCurso);
+routes.route("/:id").get(consultarUnCurso).delete(eliminarCurso);
 
 routes.put(
   "/:id",

@@ -34,16 +34,5 @@ export class Estudiante {
   updatedAt: Date;
 
   @ManyToMany(() => Curso, (curso) => curso.estudiantes)
-  // @JoinTable({
-  //   name: "cursos_estudiantes",
-  //   joinColumn: {
-  //     name: "estudiante_id",
-  //     referencedColumnName: "id",
-  //   },
-  //   inverseJoinColumn: {
-  //     name: "curso_id",
-  //     referencedColumnName: "id",
-  //   },
-  // })
   cursos: Curso[];
 }

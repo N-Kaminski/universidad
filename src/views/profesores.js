@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     if (!validacionExitosa) {
-      return; // Detener la ejecución si hay errores de validación
+      return;
     } else {
       const nuevoProfesor = {
         dni,
@@ -106,7 +106,7 @@ function validarProfesor(dni, nombre, apellido, email, profesion, telefono) {
     return false;
   }
 
-  return true; // Si todas las validaciones son correctas
+  return true;
 }
 
 /**** OBTENER LISTA DE PROFESORES ****/
@@ -161,7 +161,7 @@ async function agregarProfesor(profesor) {
         title: "Profesor agregado",
         text: "El profesor ha sido agregado exitosamente.",
       });
-      obtenerProfesores(); // Actualizar la lista de profesores
+      obtenerProfesores();
     } else {
       Swal.fire({
         icon: "error",
@@ -201,7 +201,7 @@ async function eliminarProfesor(id) {
             title: "Profesor eliminado",
             text: "El profesor ha sido eliminado exitosamente.",
           });
-          obtenerProfesores(); // Actualizar la lista después de eliminar
+          obtenerProfesores();
         } else {
           Swal.fire({
             icon: "error",
@@ -224,6 +224,7 @@ async function mostrarFormularioModificar(id) {
     const response = await fetch(`http://localhost:3000/profesores/${id}`);
     const profesor = await response.json();
 
+    // Rellenar los campos del pop up
     document.getElementById("modificar-id").value = profesor.id;
     document.getElementById("modificar-dni").value = profesor.dni;
     document.getElementById("modificar-nombre").value = profesor.nombre;
@@ -232,6 +233,7 @@ async function mostrarFormularioModificar(id) {
     document.getElementById("modificar-profesion").value = profesor.profesion;
     document.getElementById("modificar-telefono").value = profesor.telefono;
 
+    // Abrir el pop up
     document.getElementById("modal-modificar").style.display = "block";
   } catch (error) {
     console.error("Error al cargar los datos del profesor:", error);
@@ -252,7 +254,6 @@ document
     const profesion = document.getElementById("modificar-profesion").value;
     const telefono = document.getElementById("modificar-telefono").value;
 
-    // Llamar a la función de validación
     const validacionExitosa = validarProfesor(
       dni,
       nombre,
@@ -263,7 +264,7 @@ document
     );
 
     if (!validacionExitosa) {
-      return; // Detener la ejecución si hay errores de validación
+      return;
     }
 
     const profesorModificado = {

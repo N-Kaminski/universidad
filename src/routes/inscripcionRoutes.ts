@@ -46,7 +46,6 @@ routes.get("/curso/:curso_id", consultarInscripcionesPorCurso);
 routes
   .route("/curso/:curso_id/estudiante/:estudiante_id")
   .get(consultarNota)
-  // .put(modificarNota)
   .delete(eliminarInscripcion);
 
 routes.put(

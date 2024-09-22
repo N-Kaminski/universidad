@@ -1,7 +1,6 @@
 document.getElementById("modal-modificar-nota").style.display = "none";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Cargar cursos y estudiantes al cargar la página
   cargarCursosConsultas();
   cargarEstudiantesConsultas();
   cargarCursosInscribir();
@@ -18,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const curso_id = document.getElementById("curso").value;
       const nota = document.getElementById("nota").value;
 
-      // Validar los campos del formulario de inscripción
       const validacionExitosa = validarInscripcion(
         estudiante_id,
         curso_id,
@@ -27,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!validacionExitosa) {
         return;
       } else {
-        // Preparar el objeto con los datos de inscripción
         const inscripcion = {
           estudiante_id,
           curso_id,
@@ -46,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("form-consultar-curso")
     .addEventListener("submit", async (event) => {
-      event.preventDefault(); // Prevenir que el formulario recargue la página
+      event.preventDefault();
       const curso_id = document.getElementById("consulta-curso").value;
       await obtenerInscripcionesPorCurso(curso_id);
     });
@@ -55,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("form-consultar-estudiante")
     .addEventListener("submit", async (event) => {
-      event.preventDefault(); // Prevenir que el formulario recargue la página
+      event.preventDefault();
       const estudiante_id = document.getElementById(
         "consulta-estudiante"
       ).value;
@@ -65,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /**** VALIDACION ****/
 function validarInscripcion(estudiante_id, curso_id, nota) {
-  const estudianteVal = /^\d+$/;
+  const estudianteVal = /^\d+$/; // //solo números enteros positivos
   const cursoVal = /^\d+$/;
   const notaVal = /^\d+$/;
 
@@ -87,7 +84,6 @@ function validarInscripcion(estudiante_id, curso_id, nota) {
     return false;
   }
 
-  // if (!notaVal.test(nota) || nota !== null) {
   if (nota && (isNaN(nota) || nota < 1 || nota > 10)) {
     Swal.fire({
       icon: "error",
@@ -117,7 +113,7 @@ function validarNota(nota) {
 /**** OBTENER INSCRIPCIONES ****/
 async function obtenerInscripciones() {
   try {
-    const response = await fetch("http://localhost:3000/inscripciones"); // URL de tu backend
+    const response = await fetch("http://localhost:3000/inscripciones");
     const inscripciones = await response.json();
     llenarTablaInscripciones(inscripciones);
   } catch (error) {
@@ -128,7 +124,7 @@ async function obtenerInscripciones() {
 /**** CARGAR CURSOS EN CONSULTAS ****/
 async function cargarCursosConsultas() {
   try {
-    const response = await fetch("http://localhost:3000/cursos"); // URL de tu backend
+    const response = await fetch("http://localhost:3000/cursos");
     const cursos = await response.json();
 
     const selectCurso = document.getElementById("consulta-curso");
@@ -147,7 +143,7 @@ async function cargarCursosConsultas() {
 /**** CARGAR ESTUDIANTES EN CONSULTAS ****/
 async function cargarEstudiantesConsultas() {
   try {
-    const response = await fetch("http://localhost:3000/estudiantes"); // URL de tu backend
+    const response = await fetch("http://localhost:3000/estudiantes");
     const estudiantes = await response.json();
 
     const selectEstudiante = document.getElementById("consulta-estudiante");
@@ -165,7 +161,7 @@ async function cargarEstudiantesConsultas() {
 /**** CARGAR CURSOS EN INSCRIPCIONES ****/
 async function cargarCursosInscribir() {
   try {
-    const response = await fetch("http://localhost:3000/cursos"); // URL de tu backend
+    const response = await fetch("http://localhost:3000/cursos");
     const cursos = await response.json();
 
     const selectCurso = document.getElementById("curso");
@@ -184,7 +180,7 @@ async function cargarCursosInscribir() {
 /**** CARGAR ESTUDIANTES EN INSCRIPCIONES ****/
 async function cargarEstudiantesInscribir() {
   try {
-    const response = await fetch("http://localhost:3000/estudiantes"); // URL de tu backend
+    const response = await fetch("http://localhost:3000/estudiantes");
     const estudiantes = await response.json();
 
     const selectEstudiante = document.getElementById("estudiante");
@@ -202,7 +198,7 @@ async function cargarEstudiantesInscribir() {
 /**** LLENAR TABLA DE INSCRIPCIONES ****/
 function llenarTablaInscripciones(inscripciones) {
   const tablaInscripciones = document.getElementById("tabla-inscripciones");
-  tablaInscripciones.innerHTML = ""; // Limpiar la tabla antes de rellenarla
+  tablaInscripciones.innerHTML = "";
 
   inscripciones.forEach((inscripcion) => {
     const curso_id = inscripcion.curso ? inscripcion.curso.id : undefined;
@@ -210,7 +206,6 @@ function llenarTablaInscripciones(inscripciones) {
       ? inscripcion.estudiante.id
       : undefined;
 
-    // Si curso_id o estudiante_id están indefinidos, haz un log de error para depurar
     if (!curso_id || !estudiante_id) {
       console.error(
         "Falta curso_id o estudiante_id en la inscripción:",
@@ -240,7 +235,6 @@ function llenarTablaInscripciones(inscripciones) {
 async function obtenerInscripcionesPorCurso(curso_id) {
   try {
     const response = await fetch(
-      // `http://localhost:3000/inscripciones?curso_id=${curso_id}`
       `http://localhost:3000/inscripciones/curso/${curso_id}`
     );
     if (response.ok) {
@@ -252,7 +246,7 @@ async function obtenerInscripcionesPorCurso(curso_id) {
         title: "Sin inscripciones",
         text: "No se encontraron alumnos inscriptos para este curso.",
       });
-      llenarTablaInscripciones([]); // Pasar un array vacío
+      llenarTablaInscripciones([]);
     } else {
       throw new Error("Error inesperado al obtener inscripciones.");
     }
@@ -265,7 +259,6 @@ async function obtenerInscripcionesPorCurso(curso_id) {
 async function obtenerInscripcionesPorEstudiante(estudiante_id) {
   try {
     const response = await fetch(
-      // `http://localhost:3000/inscripciones?estudiante_id=${estudiante_id}`
       `http://localhost:3000/inscripciones/estudiante/${estudiante_id}`
     );
     if (response.ok) {
@@ -277,7 +270,7 @@ async function obtenerInscripcionesPorEstudiante(estudiante_id) {
         title: "Sin inscripciones",
         text: "No se encontraron inscripciones para este estudiante.",
       });
-      llenarTablaInscripciones([]); // Pasar un array vacío
+      llenarTablaInscripciones([]);
     } else {
       throw new Error("Error inesperado al obtener inscripciones.");
     }
@@ -292,7 +285,7 @@ async function inscribirEstudiante(inscripcion) {
     const response = await fetch("http://localhost:3000/inscripciones", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(inscripcion), // Convertir los datos a JSON
+      body: JSON.stringify(inscripcion),
     });
 
     const result = await response.json();
@@ -303,7 +296,7 @@ async function inscribirEstudiante(inscripcion) {
         title: "Inscripción realizada",
         text: "La inscripción ha sido realizada correctamente.",
       });
-      obtenerInscripciones(); // Recargar la lista de inscripciones
+      obtenerInscripciones();
     } else if (
       result.message === "El estudiante ya está inscrito en este curso."
     ) {
@@ -350,7 +343,7 @@ async function eliminarInscripcion(curso_id, estudiante_id) {
             title: "Inscripción eliminada",
             text: "La inscripción ha sido eliminada correctamente.",
           });
-          obtenerInscripciones(); // Recargar la lista de inscripciones
+          obtenerInscripciones();
         } else {
           Swal.fire({
             icon: "error",
@@ -368,7 +361,6 @@ async function eliminarInscripcion(curso_id, estudiante_id) {
 /*-------------------------- */
 /**** MODIFICAR NOTA + POP UP ****/
 function modificarNota(curso_id, estudiante_id) {
-  // Abrir el pop up
   const modal = document.getElementById("modal-modificar-nota");
   modal.style.display = "block";
 
@@ -384,7 +376,6 @@ function modificarNota(curso_id, estudiante_id) {
   )
     .then((response) => response.json())
     .then((data) => {
-      // Cargar la nota actual en el campo de nota
       document.getElementById("modificar-nota").value = data.nota || "";
     })
     .catch((error) => {
@@ -408,7 +399,6 @@ document
     );
     const nuevaNota = document.getElementById("modificar-nota").value;
 
-    // Validación: la nota no debe estar vacía y debe ser un número entre 1 y 10
     if (!validarNota(nuevaNota)) {
       return;
     }
@@ -435,8 +425,8 @@ document
           title: "Nota modificada",
           text: "La nota ha sido modificada correctamente.",
         });
-        document.getElementById("modal-modificar-nota").style.display = "none"; // Cerrar el pop up
-        obtenerInscripciones(); // Refrescar tabla de inscripciones
+        document.getElementById("modal-modificar-nota").style.display = "none";
+        obtenerInscripciones();
       } else {
         Swal.fire({
           icon: "error",

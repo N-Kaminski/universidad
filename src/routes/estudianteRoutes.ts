@@ -33,11 +33,7 @@ routes.post(
 
 routes.get("/", consultarEstudiantes);
 
-routes
-  .route("/:id")
-  .get(consultarUnEstudiante)
-  // .put(modificarEstudiante)
-  .delete(eliminarEstudiante);
+routes.route("/:id").get(consultarUnEstudiante).delete(eliminarEstudiante);
 
 routes.put(
   "/:id",

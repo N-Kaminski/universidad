@@ -1,13 +1,10 @@
 document.getElementById("modal-modificar").style.display = "none";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Cargar la lista de cursos
   obtenerCursos();
-
-  // Cargar la lista de profesores en el formulario de agregar curso
   obtenerProfesoresParaFormulario();
 
-  // Evento para manejar el envío del formulario de agregar curso
+  // Agregar curso
   const formCurso = document.getElementById("form-curso");
   formCurso.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -28,9 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /**** VALIDACION ****/
 function validarCurso(nombre, descripcion, profesor_id) {
-  const nombreVal = /^[a-zA-Z0-9\s]{3,50}$/;
-  const descripcionVal = /^.{5,200}$/;
-  const profesor_idVal = /^\d+$/;
+  const nombreVal = /^[a-zA-Z0-9\s]{3,50}$/; //solo letras, números y espacios, entre 3 y 50 caracteres
+  const descripcionVal = /^.{5,200}$/; //cualquier carácter, mínimo 5 y máximo 200 caracteres
+  const profesor_idVal = /^\d+$/; //solo números enteros positivos
 
   if (!nombreVal.test(nombre) && !descripcionVal.test(descripcion)) {
     Swal.fire({
@@ -71,7 +68,7 @@ function validarCurso(nombre, descripcion, profesor_id) {
     return false;
   }
 
-  return true; // Si todas las validaciones pasan
+  return true;
 }
 
 /**** OBTENER LISTA DE CURSOS ****/
@@ -83,11 +80,10 @@ async function obtenerCursos() {
         "Content-Type": "application/json",
       },
     });
-    const cursos = await response.json(); // Parsear la respuesta a JSON
-    const tbody = document.querySelector("#tabla-cursos"); // Obtener el cuerpo de la tabla
-    tbody.innerHTML = ""; // Limpiar la tabla antes de insertar nuevos datos
+    const cursos = await response.json();
+    const tbody = document.querySelector("#tabla-cursos");
+    tbody.innerHTML = "";
 
-    // Iterar sobre cada curso recibido y agregar una fila a la tabla
     cursos.forEach((curso) => {
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -100,7 +96,7 @@ async function obtenerCursos() {
               <button class="btn-eliminar" onclick="eliminarCurso(${curso.id})"><i class="fas fa-times"></i></button>
             </td>
           `;
-      tbody.appendChild(row); // Agregar la fila a la tabla
+      tbody.appendChild(row);
     });
   } catch (error) {
     console.error("Error al obtener cursos:", error);
@@ -111,15 +107,14 @@ async function obtenerCursos() {
 async function obtenerProfesoresParaFormulario() {
   try {
     const response = await fetch("http://localhost:3000/profesores");
-    const profesores = await response.json(); // Parsear la respuesta a JSON
-    const selectProfesor = document.getElementById("profesor"); // Select del formulario de profesores
+    const profesores = await response.json();
+    const selectProfesor = document.getElementById("profesor");
 
-    // Poblar el select con los profesores obtenidos
     profesores.forEach((profesor) => {
       const option = document.createElement("option");
       option.value = profesor.id;
       option.text = `${profesor.nombre} ${profesor.apellido}`;
-      selectProfesor.appendChild(option); // Añadir el profesor como opción
+      selectProfesor.appendChild(option);
     });
   } catch (error) {
     console.error("Error al obtener profesores:", error);
@@ -134,7 +129,7 @@ async function agregarCurso(curso) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(curso), // Convertir el objeto curso a JSON para enviarlo
+      body: JSON.stringify(curso),
     });
 
     if (response.ok) {
@@ -143,7 +138,7 @@ async function agregarCurso(curso) {
         title: "Curso agregado",
         text: "El curso ha sido agregado correctamente.",
       });
-      obtenerCursos(); // Volver a cargar la lista de cursos
+      obtenerCursos();
     } else {
       Swal.fire({
         icon: "error",
@@ -183,7 +178,7 @@ async function eliminarCurso(id) {
             title: "Curso eliminado",
             text: "El curso ha sido eliminado exitosamente.",
           });
-          obtenerCursos(); // Volver a cargar la lista de cursos después de eliminar
+          obtenerCursos();
         } else {
           Swal.fire({
             icon: "error",
@@ -202,7 +197,7 @@ async function eliminarCurso(id) {
 async function mostrarFormularioModificar(id) {
   try {
     const response = await fetch(`http://localhost:3000/cursos/${id}`);
-    const curso = await response.json(); // Obtener los datos del curso
+    const curso = await response.json();
 
     // Llenar los campos del formulario con los datos actuales del curso
     document.getElementById("modificar-id").value = curso.id;
@@ -215,7 +210,6 @@ async function mostrarFormularioModificar(id) {
     const selectProfesorModificar =
       document.getElementById("modificar-profesor");
 
-    // Limpiar el select de profesores antes de poblarlo
     selectProfesorModificar.innerHTML = "";
 
     // Poblar el select con los profesores y seleccionar el que corresponde al curso
@@ -223,10 +217,8 @@ async function mostrarFormularioModificar(id) {
       const option = document.createElement("option");
       option.value = profesor.id;
       option.text = `${profesor.nombre} ${profesor.apellido}`;
-      // Seleccionar el profesor correcto que corresponde al curso
       if (profesor.id === curso.profesor.id) {
-        // Aquí usamos el campo profesor_id
-        option.selected = true; // Marcamos el profesor asignado como seleccionado
+        option.selected = true;
       }
       selectProfesorModificar.appendChild(option);
     });
@@ -242,7 +234,7 @@ async function mostrarFormularioModificar(id) {
 document
   .getElementById("form-modificar")
   .addEventListener("submit", async function (event) {
-    event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
+    event.preventDefault();
 
     // Obtener los nuevos valores del formulario de modificación
     const id = document.getElementById("modificar-id").value;
@@ -268,7 +260,7 @@ async function modificarCurso(id, cursoModificado) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(cursoModificado), // Convertir el curso modificado a JSON
+      body: JSON.stringify(cursoModificado),
     });
 
     if (response.ok) {
@@ -277,8 +269,8 @@ async function modificarCurso(id, cursoModificado) {
         title: "Curso modificado",
         text: "El curso ha sido modificado exitosamente.",
       });
-      document.getElementById("modal-modificar").style.display = "none"; // Cerrar el modal
-      obtenerCursos(); // Recargar la lista de cursos
+      document.getElementById("modal-modificar").style.display = "none";
+      obtenerCursos();
     } else {
       Swal.fire({
         icon: "error",
